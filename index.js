@@ -18,14 +18,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Route principale - supporta sia il vecchio che il nuovo sistema
+// Route principale - supporte à la fois l'ancien et le nouveau système
 app.get('/', async (req, res) => {
     const protocol = req.headers['x-forwarded-proto'] || req.protocol;
     const host = req.headers['x-forwarded-host'] || req.get('host');
     res.send(renderConfigPage(protocol, host, req.query, config.manifest));
 });
 
-// Nuova route per la configurazione codificata
+// Nouvelle route pour la configuration encodée
 app.get('/:config/configure', async (req, res) => {
     try {
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
@@ -33,31 +33,31 @@ app.get('/:config/configure', async (req, res) => {
         const configString = Buffer.from(req.params.config, 'base64').toString();
         const decodedConfig = Object.fromEntries(new URLSearchParams(configString));
 
-        // Inizializza il generatore Python se configurato
+        // Initialise le générateur Python si configuré
         if (decodedConfig.python_script_url) {
-            console.log('Inizializzazione Script Python Generatore dalla configurazione');
+            console.log('Initialisation du Script Python Générateur depuis la configuration');
             try {
-                // Scarica lo script Python se non già scaricato
+                // Télécharge le script Python s'il n'est pas déjà téléchargé
                 await PythonRunner.downloadScript(decodedConfig.python_script_url);
 
-                // Se è stato definito un intervallo di aggiornamento, impostalo
+                // Si un intervalle de mise à jour a été défini, le configurer
                 if (decodedConfig.python_update_interval) {
-                    console.log('Impostazione dell\'aggiornamento automatico del generatore Python');
+                    console.log('Configuration de la mise à jour automatique du générateur Python');
                     PythonRunner.scheduleUpdate(decodedConfig.python_update_interval);
                 }
             } catch (pythonError) {
-                console.error('Errore nell\'inizializzazione dello script Python:', pythonError);
+                console.error('Erreur lors de l\'initialisation du script Python :', pythonError);
             }
         }
 
         res.send(renderConfigPage(protocol, host, decodedConfig, config.manifest));
     } catch (error) {
-        console.error('Errore nella configurazione:', error);
+        console.error('Erreur dans la configuration :', error);
         res.redirect('/');
     }
 });
 
-// Route per il manifest - supporta sia il vecchio che il nuovo sistema
+// Route pour le manifeste - supporte à la fois l'ancien et le nouveau système
 app.get('/manifest.json', async (req, res) => {
     try {
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
@@ -100,7 +100,7 @@ app.get('/manifest.json', async (req, res) => {
         const builder = new addonBuilder(manifestConfig);
 
         if (req.query.epg_enabled === 'true') {
-            // Se non è stato fornito manualmente un EPG URL, usa quello della playlist
+            // Si l'URL EPG n'a pas été fournie manuellement, utiliser celle de la playlist
             const epgToUse = req.query.epg ||
                 (global.CacheManager.getCachedData().epgUrls &&
                     global.CacheManager.getCachedData().epgUrls.length > 0
@@ -117,12 +117,12 @@ app.get('/manifest.json', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(builder.getInterface().manifest);
     } catch (error) {
-        console.error('Error creating manifest:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Erreur lors de la création du manifeste :', error);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
     }
 });
 
-// Nuova route per il manifest con configurazione codificata
+// Nouvelle route pour le manifeste avec configuration encodée
 app.get('/:config/manifest.json', async (req, res) => {
     try {
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
@@ -134,34 +134,34 @@ app.get('/:config/manifest.json', async (req, res) => {
             await global.CacheManager.rebuildCache(decodedConfig.m3u);
         }
         if (decodedConfig.resolver_script) {
-            console.log('Inizializzazione Script Resolver dalla configurazione');
+            console.log('Initialisation du Script Resolver depuis la configuration');
             try {
-                // Scarica lo script Resolver
+                // Télécharge le script Resolver
                 const resolverDownloaded = await PythonResolver.downloadScript(decodedConfig.resolver_script);
 
-                // Se è stato definito un intervallo di aggiornamento, impostalo
+                // Si un intervalle de mise à jour a été défini, le configurer
                 if (decodedConfig.resolver_update_interval) {
-                    console.log('Impostazione dell\'aggiornamento automatico del resolver');
+                    console.log('Configuration de la mise à jour automatique du resolver');
                     PythonResolver.scheduleUpdate(decodedConfig.resolver_update_interval);
                 }
             } catch (resolverError) {
-                console.error('Errore nell\'inizializzazione dello script Resolver:', resolverError);
+                console.error('Erreur lors de l\'initialisation du script Resolver :', resolverError);
             }
         }
-        // Inizializza il generatore Python se configurato
+        // Initialise le générateur Python si configuré
         if (decodedConfig.python_script_url) {
-            console.log('Inizializzazione Script Python Generatore dalla configurazione');
+            console.log('Initialisation du Script Python Générateur depuis la configuration');
             try {
-                // Scarica lo script Python se non già scaricato
+                // Télécharge le script Python s'il n'est pas déjà téléchargé
                 await PythonRunner.downloadScript(decodedConfig.python_script_url);
 
-                // Se è stato definito un intervallo di aggiornamento, impostalo
+                // Si un intervalle de mise à jour a été défini, le configurer
                 if (decodedConfig.python_update_interval) {
-                    console.log('Impostazione dell\'aggiornamento automatico del generatore Python');
+                    console.log('Configuration de la mise à jour automatique du générateur Python');
                     PythonRunner.scheduleUpdate(decodedConfig.python_update_interval);
                 }
             } catch (pythonError) {
-                console.error('Errore nell\'inizializzazione dello script Python:', pythonError);
+                console.error('Erreur lors de l\'initialisation du script Python :', pythonError);
             }
         }
 
@@ -196,7 +196,7 @@ app.get('/:config/manifest.json', async (req, res) => {
         const builder = new addonBuilder(manifestConfig);
 
         if (decodedConfig.epg_enabled === 'true') {
-            // Se non è stato fornito manualmente un EPG URL, usa quello della playlist
+            // Si l'URL EPG n'a pas été fournie manuellement, utiliser celle de la playlist
             const epgToUse = decodedConfig.epg ||
                 (global.CacheManager.getCachedData().epgUrls &&
                     global.CacheManager.getCachedData().epgUrls.length > 0
@@ -215,12 +215,12 @@ app.get('/:config/manifest.json', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(builder.getInterface().manifest);
     } catch (error) {
-        console.error('Error creating manifest:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Erreur lors de la création du manifeste :', error);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
     }
 });
 
-// Manteniamo la route esistente per gli altri endpoint
+// Maintien de la route existante pour les autres points de terminaison (endpoints)
 app.get('/:resource/:type/:id/:extra?.json', async (req, res, next) => {
     const { resource, type, id } = req.params;
     const extra = req.params.extra
@@ -247,12 +247,12 @@ app.get('/:resource/:type/:id/:extra?.json', async (req, res, next) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(result);
     } catch (error) {
-        console.error('Error handling request:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Erreur lors du traitement de la requête :', error);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
     }
 });
 
-//route download template
+// Route de téléchargement du template
 app.get('/api/resolver/download-template', (req, res) => {
     const PythonResolver = require('./python-resolver');
     const fs = require('fs');
@@ -263,48 +263,48 @@ app.get('/api/resolver/download-template', (req, res) => {
             res.setHeader('Content-Disposition', 'attachment; filename="resolver_script.py"');
             res.sendFile(PythonResolver.scriptPath);
         } else {
-            res.status(404).json({ success: false, message: 'Template non trovato. Crealo prima con la funzione "Crea Template".' });
+            res.status(404).json({ success: false, message: 'Template non trouvé. Créez-le d\'abord avec la fonction "Créer Template".' });
         }
     } catch (error) {
-        console.error('Errore nel download del template:', error);
+        console.error('Erreur lors du téléchargement du template :', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
 function cleanupTempFolder() {
-    console.log('\n=== Pulizia cartella temp all\'avvio ===');
+    console.log('\n=== Nettoyage du dossier temp au démarrage ===');
     const tempDir = path.join(__dirname, 'temp');
 
-    // Controlla se la cartella temp esiste
+    // Vérifie si le dossier temp existe
     if (!fs.existsSync(tempDir)) {
-        console.log('Cartella temp non trovata, la creo...');
+        console.log('Dossier temp non trouvé, création en cours...');
         fs.mkdirSync(tempDir, { recursive: true });
         return;
     }
 
     try {
-        // Leggi tutti i file nella cartella temp
+        // Lit tous les fichiers dans le dossier temp
         const files = fs.readdirSync(tempDir);
         let deletedCount = 0;
 
-        // Elimina ogni file
+        // Supprime chaque fichier
         for (const file of files) {
             try {
                 const filePath = path.join(tempDir, file);
-                // Controlla se è un file e non una cartella
+                // Vérifie s'il s'agit d'un fichier et non d'un dossier
                 if (fs.statSync(filePath).isFile()) {
                     fs.unlinkSync(filePath);
                     deletedCount++;
                 }
             } catch (fileError) {
-                console.error(`❌ Errore nell'eliminazione del file ${file}:`, fileError.message);
+                console.error(`❌ Erreur lors de la suppression du fichier ${file} :`, fileError.message);
             }
         }
 
-        console.log(`✓ Eliminati ${deletedCount} file temporanei`);
-        console.log('=== Pulizia cartella temp completata ===\n');
+        console.log(`✓ ${deletedCount} fichiers temporaires supprimés`);
+        console.log('=== Nettoyage du dossier temp terminé ===\n');
     } catch (error) {
-        console.error('❌ Errore nella pulizia della cartella temp:', error.message);
+        console.error('❌ Erreur lors du nettoyage du dossier temp :', error.message);
     }
 }
 
@@ -314,7 +314,7 @@ function safeParseExtra(extraParam) {
 
         const decodedExtra = decodeURIComponent(extraParam);
 
-        // Supporto per skip con genere
+        // Support pour le saut (skip) avec genre
         if (decodedExtra.includes('genre=') && decodedExtra.includes('&skip=')) {
             const parts = decodedExtra.split('&');
             const genre = parts.find(p => p.startsWith('genre=')).split('=')[1];
@@ -344,12 +344,12 @@ function safeParseExtra(extraParam) {
             return {};
         }
     } catch (error) {
-        console.error('Error parsing extra:', error);
+        console.error('Erreur lors de l\'analyse de extra :', error);
         return {};
     }
 }
 
-// Per il catalog con config codificato
+// Pour le catalogue avec configuration encodée
 app.get('/:config/catalog/:type/:id/:extra?.json', async (req, res) => {
     try {
         const configString = Buffer.from(req.params.config, 'base64').toString();
@@ -368,12 +368,12 @@ app.get('/:config/catalog/:type/:id/:extra?.json', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(result);
     } catch (error) {
-        console.error('Error handling catalog request:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Erreur lors du traitement de la requête catalogue :', error);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
     }
 });
 
-// Per lo stream con config codificato
+// Pour le flux (stream) avec configuration encodée
 app.get('/:config/stream/:type/:id.json', async (req, res) => {
     try {
         const configString = Buffer.from(req.params.config, 'base64').toString();
@@ -388,12 +388,12 @@ app.get('/:config/stream/:type/:id.json', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(result);
     } catch (error) {
-        console.error('Error handling stream request:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Erreur lors du traitement de la requête flux :', error);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
     }
 });
 
-// Per il meta con config codificato
+// Pour les métadonnées (meta) avec configuration encodée
 app.get('/:config/meta/:type/:id.json', async (req, res) => {
     try {
         const configString = Buffer.from(req.params.config, 'base64').toString();
@@ -408,19 +408,19 @@ app.get('/:config/meta/:type/:id.json', async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.send(result);
     } catch (error) {
-        console.error('Error handling meta request:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('Erreur lors du traitement de la requête méta :', error);
+        res.status(500).json({ error: 'Erreur interne du serveur' });
     }
 });
 
-// Route per servire il file M3U generato
+// Route pour servir le fichier M3U généré
 app.get('/generated-m3u', (req, res) => {
     const m3uContent = PythonRunner.getM3UContent();
     if (m3uContent) {
         res.setHeader('Content-Type', 'text/plain');
         res.send(m3uContent);
     } else {
-        res.status(404).send('File M3U non trovato. Eseguire prima lo script Python.');
+        res.status(404).send('Fichier M3U non trouvé. Exécutez d\'abord le script Python.');
     }
 });
 
@@ -431,7 +431,7 @@ app.post('/api/resolver', async (req, res) => {
         if (action === 'download' && url) {
             const success = await PythonResolver.downloadScript(url);
             if (success) {
-                res.json({ success: true, message: 'Script resolver scaricato con successo' });
+                res.json({ success: true, message: 'Script resolver téléchargé avec succès' });
             } else {
                 res.status(500).json({ success: false, message: PythonResolver.getStatus().lastError });
             }
@@ -440,7 +440,7 @@ app.post('/api/resolver', async (req, res) => {
             if (success) {
                 res.json({
                     success: true,
-                    message: 'Template script resolver creato con successo',
+                    message: 'Template script resolver créé avec succès',
                     scriptPath: PythonResolver.scriptPath
                 });
             } else {
@@ -450,19 +450,19 @@ app.post('/api/resolver', async (req, res) => {
             const isHealthy = await PythonResolver.checkScriptHealth();
             res.json({
                 success: isHealthy,
-                message: isHealthy ? 'Script resolver valido' : PythonResolver.getStatus().lastError
+                message: isHealthy ? 'Script resolver valide' : PythonResolver.getStatus().lastError
             });
         } else if (action === 'status') {
             res.json(PythonResolver.getStatus());
         } else if (action === 'clear-cache') {
             PythonResolver.clearCache();
-            res.json({ success: true, message: 'Cache resolver svuotata' });
+            res.json({ success: true, message: 'Cache resolver vidé' });
         } else if (action === 'schedule' && interval) {
             const success = PythonResolver.scheduleUpdate(interval);
             if (success) {
                 res.json({
                     success: true,
-                    message: `Aggiornamento automatico impostato ogni ${interval}`
+                    message: `Mise à jour automatique configurée toutes les ${interval}`
                 });
             } else {
                 res.status(500).json({ success: false, message: PythonResolver.getStatus().lastError });
@@ -471,13 +471,13 @@ app.post('/api/resolver', async (req, res) => {
             const stopped = PythonResolver.stopScheduledUpdates();
             res.json({
                 success: true,
-                message: stopped ? 'Aggiornamento automatico fermato' : 'Nessun aggiornamento pianificato da fermare'
+                message: stopped ? 'Mise à jour automatique arrêtée' : 'Aucune mise à jour planifiée à arrêter'
             });
         } else {
-            res.status(400).json({ success: false, message: 'Azione non valida' });
+            res.status(400).json({ success: false, message: 'Action non valide' });
         }
     } catch (error) {
-        console.error('Errore API Resolver:', error);
+        console.error('Erreur API Resolver :', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
@@ -486,14 +486,14 @@ app.post('/api/rebuild-cache', async (req, res) => {
     try {
         const m3uUrl = req.body.m3u;
         if (!m3uUrl) {
-            return res.status(400).json({ success: false, message: 'URL M3U richiesto' });
+            return res.status(400).json({ success: false, message: 'URL M3U requise' });
         }
 
-        console.log('🔄 Richiesta di ricostruzione cache ricevuta');
+        console.log('🔄 Requête de reconstruction de cache reçue');
         await global.CacheManager.rebuildCache(req.body.m3u, req.body);
 
         if (req.body.epg_enabled === 'true') {
-            console.log('📡 Ricostruzione EPG in corso...');
+            console.log('📡 Reconstruction EPG en cours...');
             const epgToUse = req.body.epg ||
                 (global.CacheManager.getCachedData().epgUrls && global.CacheManager.getCachedData().epgUrls.length > 0
                     ? global.CacheManager.getCachedData().epgUrls.join(',')
@@ -503,15 +503,15 @@ app.post('/api/rebuild-cache', async (req, res) => {
             }
         }
 
-        res.json({ success: true, message: 'Cache e EPG ricostruiti con successo' });
+        res.json({ success: true, message: 'Cache et EPG reconstruits avec succès' });
 
     } catch (error) {
-        console.error('Errore nella ricostruzione della cache:', error);
+        console.error('Erreur lors de la reconstruction du cache :', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 
-// Endpoint API per le operazioni sullo script Python
+// Endpoint API pour les opérations sur le script Python
 app.post('/api/python-script', async (req, res) => {
     const { action, url, interval } = req.body;
 
@@ -519,7 +519,7 @@ app.post('/api/python-script', async (req, res) => {
         if (action === 'download' && url) {
             const success = await PythonRunner.downloadScript(url);
             if (success) {
-                res.json({ success: true, message: 'Script scaricato con successo' });
+                res.json({ success: true, message: 'Script téléchargé avec succès' });
             } else {
                 res.status(500).json({ success: false, message: PythonRunner.getStatus().lastError });
             }
@@ -528,7 +528,7 @@ app.post('/api/python-script', async (req, res) => {
             if (success) {
                 res.json({
                     success: true,
-                    message: 'Script eseguito con successo',
+                    message: 'Script exécuté avec succès',
                     m3uUrl: `${req.protocol}://${req.get('host')}/generated-m3u`
                 });
             } else {
@@ -541,7 +541,7 @@ app.post('/api/python-script', async (req, res) => {
             if (success) {
                 res.json({
                     success: true,
-                    message: `Aggiornamento automatico impostato ogni ${interval}`
+                    message: `Mise à jour automatique configurée toutes les ${interval}`
                 });
             } else {
                 res.status(500).json({ success: false, message: PythonRunner.getStatus().lastError });
@@ -550,33 +550,33 @@ app.post('/api/python-script', async (req, res) => {
             const stopped = PythonRunner.stopScheduledUpdates();
             res.json({
                 success: true,
-                message: stopped ? 'Aggiornamento automatico fermato' : 'Nessun aggiornamento pianificato da fermare'
+                message: stopped ? 'Mise à jour automatique arrêtée' : 'Aucune mise à jour planifiée à arrêter'
             });
         } else {
-            res.status(400).json({ success: false, message: 'Azione non valida' });
+            res.status(400).json({ success: false, message: 'Action non valide' });
         }
     } catch (error) {
-        console.error('Errore API Python:', error);
+        console.error('Erreur API Python :', error);
         res.status(500).json({ success: false, message: error.message });
     }
 });
 async function startAddon() {
     cleanupTempFolder();
 
-    // Inizializza CacheManager
+    // Initialise CacheManager
     global.CacheManager = await CacheManagerFactory(config);
 
     try {
         const port = process.env.PORT || 10000;
         app.listen(port, () => {
             console.log('=============================\n');
-            console.log('OMG ADDON Avviato con successo');
-            console.log('Visita la pagina web per generare la configurazione del manifest e installarla su stremio');
-            console.log('Link alla pagina di configurazione:', `http://localhost:${port}`);
+            console.log('OMG ADDON Démarré avec succès');
+            console.log('Visitez la page web pour générer la configuration du manifeste et l\'installer sur Stremio');
+            console.log('Lien vers la page de configuration :', `http://localhost:${port}`);
             console.log('=============================\n');
         });
     } catch (error) {
-        console.error('Failed to start addon:', error);
+        console.error('Échec du démarrage de l\'addon :', error);
         process.exit(1);
     }
 }
