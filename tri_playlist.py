@@ -3,119 +3,133 @@ import re
 import os
 
 # Configuration
-# Utilisation de sources plus robustes et maintenues
-SOURCE_URLS = [
-    "https://iptv-org.github.io/iptv/languages/fra.m3u",
-    "https://raw.githubusercontent.com/mcreal/m3u8-france/master/france.m3u",
-    "https://raw.githubusercontent.com/freetv-app/freetv-app/master/playlists/playlist_france.m3u"
-]
+SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
-# --- DICTIONNAIRE DE TRI MANUEL ---
+# --- DICTIONNAIRE COMPLET ET EXHAUSTIF ---
 CATEGORIES = {
     "🇫🇷 TNT": [
-        ["TF1", "TF 1"], ["TF1 Séries Films", "TF1 Series"], ["France 2"], ["France 3"], 
-        ["France 4"], ["France 5"], ["Canal+", "Canal Plus"], ["M6"], ["Arte"], ["LCP"], 
-        ["W9"], ["TMC"], ["TFX"], ["Gulli"], ["BFM TV", "BFMTV"], 
-        ["CNEWS", "C NEWS"], ["LCI"], ["Franceinfo", "France info"], ["CSTAR", "C STAR"], 
-        ["L'Equipe", "L'Équipe"], ["6Ter"], ["RMC Story"], ["RMC Découverte"], ["Chérie 25"]
+        ["TF1"], ["France 2"], ["France 3"], ["France 4"], ["France 5"], 
+        ["M6"], ["Arte"], ["C8"], ["W9"], ["TMC"], ["TFX"], ["NRJ 12", "NRJ12"], 
+        ["LCP"], ["France 4"], ["BFM TV", "BFMTV"], ["CNews"], ["CSTAR"], 
+        ["Gulli"], ["TF1 Séries Films", "TF1 Series"], ["L'Equipe", "L'Équipe"], 
+        ["6ter"], ["RMC Story"], ["RMC Découverte"], ["Chérie 25"], ["LCI"], ["Franceinfo"]
     ],
-    "🎬 CINÉMA": [
-        ["AB1"], ["Action"], ["Ciné+ Premier", "Cine+ Premier"], ["Ciné+ Frisson"], 
-        ["Ciné+ Emotion"], ["Ciné+ Famiz"], ["Ciné+ Classic"], ["Crime District"], 
-        ["OCS Max"], ["OCS City"], ["OCS Choc"], ["OCS Géants"], ["Mangas"], 
-        ["Paramount Channel"], ["RTL9"], ["Téva", "Teva"]
+    "🎬 CINÉMA & DIV": [
+        ["Canal+"], ["Canal+ Sport"], ["Canal+ Cinema"], ["Canal+ Kids"], ["Canal+ Series"],
+        ["TF1+"], ["AB1"], ["Action"], ["RTL9"], ["Téva", "Teva"], ["TV5 Monde", "TV5Monde"],
+        ["Paramount Channel"], ["Crime District"], ["Comedy Central"], ["Warner TV"],
+        ["Ciné+ Premier", "Cine+ Premier"], ["Ciné+ Frisson"], ["Ciné+ Emotion"], 
+        ["Ciné+ Famiz"], ["Ciné+ Classic"], ["Ciné+ Club"], ["Ciné+ Star"],
+        ["OCS Max"], ["OCS City"], ["OCS Choc"], ["OCS Géants"]
     ],
     "⚽ SPORTS": [
-        ["Canal+ Sport"], ["Equidia"], ["Eurosport 1"], ["Eurosport 2"], ["RMC Sport 1"]
+        ["BeIN Sports 1"], ["BeIN Sports 2"], ["BeIN Sports 3"], 
+        ["Eurosport 1"], ["Eurosport 2"], ["RMC Sport 1"], ["Equidia"], ["AutoMoto"]
     ],
     "🧸 JEUNESSE": [
-        ["Canal J"], ["Disney Channel"], ["Piwi+"], ["Game One"], ["J-One"]
+        ["Disney Channel"], ["Disney Junior"], ["Nickelodeon"], ["TiJi"], 
+        ["Piwi+"], ["Canal J"], ["Cartoon Network"], ["Boomerang"], ["Mangas"]
     ],
     "🌍 DÉCOUVERTE": [
-        ["Animaux"], ["Histoire TV"], ["Le Figaro TV"], ["Montagne TV"], 
-        ["Museum TV"], ["National Geographic", "Nat Geo"], ["Planète+"], 
-        ["Science & Vie TV"], ["Toute l'Histoire"], ["Ushuaïa TV"]
+        ["National Geographic", "Nat Geo"], ["Planète+"], ["Ushuaïa TV"], 
+        ["Histoire TV"], ["Toute l'Histoire"], ["Science & Vie TV"], 
+        ["Animaux"], ["Museum TV"], ["Le Figaro TV"], ["Montagne TV"]
     ],
-    "📰 INFOS": [
-        ["BFM Business"], ["Euronews"], ["France 24"], ["i24 News"], ["La Chaîne Météo"]
+    "🎶 MUSIQUE": [
+        ["MCM"], ["MCM Top"], ["MCM Pop"], ["Mezzo"], ["MTV France", "MTV"], 
+        ["Trace Urban"], ["RFM TV"], ["Melody"]
     ],
-    "📍 RÉGIONALES": [
-        ["7ALimoges"], ["8 Mont-Blanc"], ["Alsace 20"], ["ASTV"], ["BFM Paris"], 
-        ["BIP TV"], ["IDF1"], ["Télénantes"], ["TV7 Bordeaux"], ["Vosges TV"]
-    ],
-    "🌍 INTERNATIONAL": [
-        ["24h au Bénin"], ["3A Telesud"], ["Africa 24"], ["Al Aoula"], ["Canal+ Afrique"]
+    "📍 RÉGIONALES & INTERNATIONAL": [
+        ["7ALimoges"], ["8 Mont-Blanc"], ["Alsace 20"], ["BFM Paris"], ["BFM Lyon"],
+        ["TV7 Bordeaux"], ["Télénantes"], ["Vosges TV"], ["KTO"], ["IDF1"],
+        ["2M Monde"], ["Al Aoula"], ["Canal+ Afrique"], ["France 24"]
     ]
 }
 
-def clean_name(name):
-    """ Nettoie le nom pour une comparaison robuste """
-    if not name: return ""
-    return re.sub(r'[^a-zA-Z0-9]', '', name).lower()
+def normalize(text):
+    """ Nettoyage profond pour le matching """
+    if not text: return ""
+    # Enlever (720p), (1080p), (France), etc.
+    text = re.sub(r'\(.*?\)', '', text)
+    # Enlever les caractères spéciaux et mettre en minuscule
+    return re.sub(r'[^a-z0-9]', '', text.lower())
 
 def filter_playlist():
-    found_targets = {} # {nom_chaine: (info, url, categorie)}
-    
-    # 1. Téléchargement des sources
-    all_lines = []
-    for url in SOURCE_URLS:
-        print(f"Téléchargement de la playlist depuis {url}...")
-        try:
-            r = requests.get(url, timeout=15)
-            r.raise_for_status()
-            all_lines.extend(r.text.splitlines())
-        except Exception as e:
-            print(f"Saut de la source {url} : {e}")
+    print(f"Analyse de la source : {SOURCE_URL}...")
+    try:
+        r = requests.get(SOURCE_URL, timeout=20)
+        r.raise_for_status()
+        lines = r.text.splitlines()
+    except Exception as e:
+        print(f"Erreur lors du téléchargement : {e}")
+        return
 
-    # 2. Analyse
-    current_info = ""
-    for line in all_lines:
+    found_channels = {} # {NomPropre: (InfoLine, Url)}
+    current_extinf = ""
+    vlc_opts = []
+
+    for line in lines:
         line = line.strip()
         if line.startswith("#EXTINF"):
-            current_info = line
-        elif line.startswith("http") and current_info:
-            name_match = re.search(r',([^,]+)$', current_info)
+            current_extinf = line
+            vlc_opts = []
+        elif line.startswith("#EXTVLCOPT"):
+            vlc_opts.append(line)
+        elif line.startswith("http"):
+            # Extraction du nom après la virgule
+            name_match = re.search(r',([^,]+)$', current_extinf)
             if not name_match: continue
             
             raw_name = name_match.group(1).strip()
-            clean_raw = clean_name(raw_name)
+            clean_raw = normalize(raw_name)
             
-            for cat, channels in CATEGORIES.items():
-                for aliases in channels:
+            for cat, groups in CATEGORIES.items():
+                for aliases in groups:
                     main_name = aliases[0]
-                    if main_name in found_targets: continue
+                    if main_name in found_channels: continue
                     
-                    if any(clean_name(a) == clean_raw for a in aliases):
-                        # Mise à jour du group-title
-                        new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat}"', current_info)
-                        if 'group-title="' not in new_info:
-                            new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat}"')
+                    # Vérification si l'un des alias matche le nom brut de la source
+                    if any(normalize(a) == clean_raw or normalize(a) in clean_raw for a in aliases):
+                        # On reconstruit l'entrée proprement
+                        # 1. On injecte la catégorie
+                        info = re.sub(r'group-title="[^"]+"', f'group-title="{cat}"', current_extinf)
+                        if 'group-title="' not in info:
+                            info = info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat}"')
                         
-                        # Fix du nom final
-                        final_info = re.sub(r',[^,]+$', f',{main_name}', new_info)
-                        found_targets[main_name] = (final_info, line, cat)
+                        # 2. On nettoie le nom d'affichage
+                        info = re.sub(r',.*$', f',{main_name}', info)
+                        
+                        found_channels[main_name] = {
+                            "info": info,
+                            "url": line,
+                            "opts": vlc_opts,
+                            "cat": cat
+                        }
 
-    # 3. Écriture
-    output_content = ["#EXTM3U"]
+    # Création du fichier final
+    output = ["#EXTM3U"]
     for cat in CATEGORIES.keys():
-        for name, data in found_targets.items():
-            if data[2] == cat:
-                output_content.append(data[0])
-                output_content.append(data[1])
+        for name in [g[0] for g in CATEGORIES[cat]]:
+            if name in found_channels:
+                chan = found_channels[name]
+                output.append(chan["info"])
+                for opt in chan["opts"]:
+                    output.append(opt)
+                output.append(chan["url"])
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write("\n".join(output_content))
+        f.write("\n".join(output))
 
-    # 4. Rapport de contrôle dédoublonné
-    all_req = list(dict.fromkeys([c[0] for cat in CATEGORIES.values() for c in cat]))
-    missing = sorted([c for c in all_req if c not in found_targets])
+    # Rapport final
+    requested = [g[0] for cat in CATEGORIES.values() for g in cat]
+    missing = sorted([c for c in requested if c not in found_channels])
     
+    print(f"\n--- Résumé ---")
+    print(f"Chaînes trouvées : {len(found_channels)}")
+    print(f"Chaînes manquantes : {len(missing)}")
     if missing:
-        print(f"\n--- Chaînes toujours introuvables ({len(missing)}) ---")
-        print(", ".join(missing))
-    
-    print(f"\nSuccès : {len(found_targets)} chaînes uniques filtrées dans {OUTPUT_FILE}.")
+        print(f"Manquantes : {', '.join(missing)}")
 
 if __name__ == "__main__":
     filter_playlist()
