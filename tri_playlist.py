@@ -31,24 +31,6 @@ CATEGORIES = {
         ["Sport en France", ["Sport en France"]],
         ["Trace Sport Stars", ["Trace Sport Stars"]]
     ],
-    "🌍 AFRIQUE & DOM-TOM": [
-        ["A+", ["A+", "A Plus"]], 
-        ["Africa 24", ["Africa 24"]],
-        ["Africanews", ["Africanews", "Africa News"]], 
-        ["Nollywood TV", ["Nollywood TV"]],
-        ["TV5Monde Afrique", ["TV5Monde Afrique"]], 
-        ["RTB", ["RTB"]], 
-        ["RTI", ["RTI"]], 
-        ["ORTM", ["ORTM"]], 
-        ["2M Monde", ["2M Monde"]],
-        ["Antenne Réunion", ["Antenne Réunion"]],
-        ["Canal 10", ["Canal 10"]],
-        ["Canal 3 Monde", ["Canal 3 Monde"]],
-        ["France Ô", ["France Ô"]],
-        ["3A Telesud", ["Telesud", "3A Telesud"]],
-        ["Bblack! Africa", ["Bblack! Africa"]],
-        ["Trace Africa", ["Trace Africa"]]
-    ],
     "🎬 CINÉMA & SÉRIES": [
         ["Canal+", ["Canal+"]], 
         ["Canal+ Cinema", ["Canal+ Cinema", "Ciné+", "Cine+"]], 
@@ -89,6 +71,24 @@ CATEGORIES = {
         ["TVA", ["TVA"]], 
         ["Noovo", ["Noovo"]], 
         ["LCN", ["LCN"]]
+    ],
+    "🌍 AFRIQUE & DOM-TOM": [
+        ["A+", ["A+", "A Plus"]], 
+        ["Africa 24", ["Africa 24"]],
+        ["Africanews", ["Africanews", "Africa News"]], 
+        ["Nollywood TV", ["Nollywood TV"]],
+        ["TV5Monde Afrique", ["TV5Monde Afrique"]], 
+        ["RTB", ["RTB"]], 
+        ["RTI", ["RTI"]], 
+        ["ORTM", ["ORTM"]], 
+        ["2M Monde", ["2M Monde"]],
+        ["Antenne Réunion", ["Antenne Réunion"]],
+        ["Canal 10", ["Canal 10"]],
+        ["Canal 3 Monde", ["Canal 3 Monde"]],
+        ["France Ô", ["France Ô"]],
+        ["3A Telesud", ["Telesud", "3A Telesud"]],
+        ["Bblack! Africa", ["Bblack! Africa"]],
+        ["Trace Africa", ["Trace Africa"]]
     ],
     "💎 CANAL+": [], # Catégorie pour les flux "FAST" Canal+ ou automatiques
     "📺 PLUTO TV": [],
