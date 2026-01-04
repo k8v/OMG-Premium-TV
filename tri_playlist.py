@@ -4,8 +4,8 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
-# Utilisation d'un chemin absolu pour éviter les erreurs de contexte dans Docker
-OUTPUT_FILE = "/app/temp/generated_playlist.m3u"
+# Utilisation d'un chemin relatif qui s'adapte à l'emplacement de l'exécution
+OUTPUT_FILE = "temp/generated_playlist.m3u"
 
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
@@ -100,19 +100,23 @@ def filter_playlist():
             filtered_lines.append(line)
             count += 1
 
-    # Gestion robuste du dossier de sortie
+    # Gestion de la sortie
     try:
-        output_dir = os.path.dirname(OUTPUT_FILE)
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir, mode=0o777, exist_ok=True)
-            print(f"Dossier créé : {output_dir}")
+        # On s'assure que le dossier temp existe dans le répertoire courant
+        if not os.path.exists("temp"):
+            os.makedirs("temp", exist_ok=True)
+            print("Dossier 'temp' créé localement.")
 
+        # On tente d'écrire le fichier
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write("\n".join(filtered_lines))
         
-        print(f"Succès ! {count} chaînes triées et nettoyées dans {OUTPUT_FILE}")
+        # On affiche le chemin absolu pour le débogage dans les logs
+        abs_path = os.path.abspath(OUTPUT_FILE)
+        print(f"Succès ! {count} chaînes triées dans : {abs_path}")
+        
     except Exception as e:
-        print(f"Erreur lors de l'écriture du fichier : {e}")
+        print(f"Erreur lors de l'écriture : {str(e)}")
 
 if __name__ == "__main__":
     filter_playlist()
