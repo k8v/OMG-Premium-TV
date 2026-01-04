@@ -4,114 +4,100 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
-# Le nom du fichier doit correspondre à ce que l'addon cherche pour /generated-m3u
-# Dans le doute, on utilise "generated.m3u" qui est le standard pour ce plugin
 OUTPUT_FILE = "generated.m3u"
+
+# --- DICTIONNAIRE DE TRI MANUEL (Mise à jour 2026) ---
+CATEGORIES = {
+    "🇫🇷 TNT (Arcom)": [
+        "TF1", "France 2", "France 3", "Canal+", "France 5", "M6", "Arte", "C8", 
+        "W9", "TMC", "TFX", "NRJ 12", "LCP", "Public Sénat", "France 4", "BFM TV", 
+        "CNews", "CStar", "Gulli", "France Info", "TF1 Séries Films", "L'Equipe", 
+        "6ter", "RMC Story", "RMC Découverte", "Chérie 25"
+    ],
+    "🎬 CINÉMA & SÉRIES": [
+        "AB1", "Action", "Ciné+ Premier", "Ciné+ Frisson", "Ciné+ Emotion", 
+        "Ciné+ Famiz", "Ciné+ Classic", "Crime District", "OCS Max", "OCS City", 
+        "OCS Choc", "OCS Géants", "Paramount Channel", "RTL9", "Téva", "Mangas"
+    ],
+    "⚽ SPORTS": [
+        "Canal+ Sport", "Equidia", "Eurosport 1", "Eurosport 2", "L'Equipe", "RMC Sport 1"
+    ],
+    "🧸 JEUNESSE": [
+        "Canal J", "Disney Channel", "Gulli", "Mangas", "Piwi+"
+    ],
+    "🌍 DÉCOUVERTE": [
+        "Animaux", "Histoire TV", "Museum TV", "National Geographic", "Planète+", 
+        "Science & Vie TV", "Toute l'Histoire", "Ushuaïa TV", "Montagne TV", "Le Figaro TV"
+    ],
+    "📰 INFOS": [
+        "BFM Business", "Euronews", "France 24", "i24 News", "LCI", "La Chaîne Météo"
+    ],
+    "🎶 MUSIQUE": [
+        "MCM", "Mezzo", "MTV France"
+    ],
+    "🌍 INTERNATIONAL & RÉGIONAL": [
+        "TV5 Monde", "Al Aoula", "Antenne Réunion", "Africa 24", "Africanews", "3A Telesud"
+    ]
+}
 
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
     try:
-        # Augmentation du timeout pour les playlists volumineuses
         response = requests.get(SOURCE_URL, timeout=30)
         response.raise_for_status()
     except Exception as e:
-        print(f"Erreur lors du téléchargement : {e}")
+        print(f"Erreur de téléchargement : {e}")
         return
 
     lines = response.text.splitlines()
-    filtered_lines = ["#EXTM3U"]
+    organized_content = {cat: [] for cat in CATEGORIES}
     
-    # Mots-clés pour exclure les chaînes indésirables
-    EXCLUDE = ["SHOPPING", "RELIGION", "ADULT", "RADIO", "PROMO", "LOTTO"]
-    
-    # Liste des chaînes de la TNT française pour un groupe dédié
-    TNT_FR = [
-        "TF1", "FRANCE 2", "FRANCE 3", "CANAL+", "FRANCE 5", "M6", "ARTE", "C8", 
-        "W9", "TMC", "TFX", "NRJ 12", "LCP", "PUBLIC SENAT", "FRANCE 4", "BFM TV", 
-        "CNEWS", "CSTAR", "GULLI", "FRANCE INFO", "25", "L'EQUIPE", "6TER", 
-        "RMC STORY", "RMC DECOUVERTE", "CHERIE 25"
-    ]
-
     current_info = ""
-    count = 0
-
     for line in lines:
         if line.startswith("#EXTINF"):
             current_info = line
         elif line.startswith("http"):
-            # 1. Vérification de l'exclusion
-            if any(word in current_info.upper() for word in EXCLUDE):
-                continue
-
-            # 2. Identification du Pays
-            country_prefix = "🌍 AUTRES"
-            if "France" in current_info or "(France)" in current_info:
-                country_prefix = "🇫🇷 FRANCE"
-            elif "Belgium" in current_info or "Belgique" in current_info:
-                country_prefix = "🇧🇪 BELGIQUE"
-            elif "Canada" in current_info:
-                country_prefix = "🇨🇦 CANADA"
-            elif "Switzerland" in current_info or "Suisse" in current_info:
-                country_prefix = "🇨🇭 SUISSE"
-            elif "Africa" in current_info or "Afrique" in current_info:
-                country_prefix = "🌍 AFRIQUE"
-
-            # 3. Identification du Type (Genre)
-            genre = "Général"
-            info_upper = current_info.upper()
-            
-            # Test spécifique pour la TNT Française
-            is_tnt = False
-            if country_prefix == "🇫🇷 FRANCE":
-                for tnt_chan in TNT_FR:
-                    if tnt_chan in info_upper:
-                        genre = "TNT"
-                        is_tnt = True
-                        break
-
-            if not is_tnt:
-                if any(x in info_upper for x in ["SPORT", "BEIN", "CANAL+", "EQUIPE"]):
-                    genre = "Sports"
-                elif any(x in info_upper for x in ["NEWS", "INFO", "JOURNAL", "LCI", "FRANCE 24"]):
-                    genre = "Infos"
-                elif any(x in info_upper for x in ["KIDS", "ENFANT", "CARTOON", "DISNEY", "NICKELODEON"]):
-                    genre = "Enfants"
-                elif any(x in info_upper for x in ["CINEMA", "FILM", "MOVIE", "ACTION"]):
-                    genre = "Cinéma"
-                elif any(x in info_upper for x in ["MUSIC", "MTV", "TRACE", "MEZZO"]):
-                    genre = "Musique"
-                elif any(x in info_upper for x in ["DOCUMENTAIRE", "DISCOVERY", "HISTORY", "PLANETE", "SCIENCE"]):
-                    genre = "Documentaires"
-
-            # 4. Reconstruction du groupe (group-title)
-            new_group = f'{country_prefix} | {genre}'
-            
-            if 'group-title="' in current_info:
-                current_info = re.sub(r'group-title="[^"]+"', f'group-title="{new_group}"', current_info)
-            else:
-                current_info = current_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{new_group}"')
-
-            # 5. Nettoyage du nom de la chaîne (suppression des tags de pays inutiles)
             match = re.search(r',(.+)$', current_info)
-            if match:
-                channel_name = match.group(1).strip()
-                channel_name = re.sub(r'\s?\(.*\)', '', channel_name).strip()
-                current_info = current_info[:match.start(1)] + channel_name
+            if not match: continue
+            
+            raw_name = match.group(1).strip()
+            # Nettoyage pour comparaison : on enlève les parenthèses et on met en minuscule
+            clean_name_for_comp = re.sub(r'\s?\(.*\)', '', raw_name).strip().lower()
+            
+            for cat_name, channel_list in CATEGORIES.items():
+                for target_channel in channel_list:
+                    # Comparaison exacte ou contenue sans tenir compte de la casse
+                    target_lower = target_channel.lower()
+                    
+                    # Logique de correspondance
+                    if target_lower == clean_name_for_comp or (target_lower in clean_name_for_comp and len(target_lower) > 3):
+                        # On prépare l'info de la chaîne avec le bon groupe
+                        display_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', current_info)
+                        # On force le nom propre défini dans notre dictionnaire pour un affichage propre
+                        display_info = re.sub(r',(.+)$', f',{target_channel}', display_info)
+                        
+                        organized_content[cat_name].append((display_info, line))
+                        # On ne fait pas de break ici pour autoriser la chaîne à être dans une autre catégorie
+    
+    # Génération du fichier M3U
+    final_lines = ["#EXTM3U"]
+    count = 0
+    for cat in CATEGORIES:
+        # On utilise un set pour éviter les doublons STRICTS au sein d'une même catégorie
+        seen_urls = set()
+        for info, url in organized_content[cat]:
+            if url not in seen_urls:
+                final_lines.append(info)
+                final_lines.append(url)
+                seen_urls.add(url)
+                count += 1
 
-            filtered_lines.append(current_info)
-            filtered_lines.append(line)
-            count += 1
-
-    # Écriture du fichier final
     try:
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            f.write("\n".join(filtered_lines))
-        
-        print(f"Succès ! {count} chaînes triées et prêtes pour Stremio.")
-        print(f"Fichier disponible à la racine : {os.path.abspath(OUTPUT_FILE)}")
-        
+            f.write("\n".join(final_lines))
+        print(f"Succès ! {count} entrées générées dans {OUTPUT_FILE}.")
     except Exception as e:
-        print(f"Erreur lors de l'écriture du fichier : {e}")
+        print(f"Erreur lors de l'écriture : {e}")
 
 if __name__ == "__main__":
     filter_playlist()
