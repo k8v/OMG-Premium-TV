@@ -5,7 +5,7 @@ import re
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
-# --- DICTIONNAIRE DE TRI (Basé sur ta liste) ---
+# --- DICTIONNAIRE DE TRI (Ordre mis à jour) ---
 CATEGORIES = {
     "🇫🇷 TNT": [
         ["TF1", ["TF1"]], ["France 2", ["France 2"]], ["France 3", ["France 3"]], 
@@ -61,7 +61,7 @@ CATEGORIES = {
         ["Club RTL", ["Club RTL"]], 
         ["Plug RTL", ["Plug RTL"]]
     ],
-    "🇨Header 🇨🇭 SUISSE": [
+    "🇨🇭 SUISSE": [
         ["RTS Un", ["RTS Un"]], 
         ["RTS Deux", ["RTS Deux"]], 
         ["SRF info", ["SRF info"]]
@@ -90,10 +90,11 @@ CATEGORIES = {
         ["Bblack! Africa", ["Bblack! Africa"]],
         ["Trace Africa", ["Trace Africa"]]
     ],
-    "💎 CANAL+": [], # Catégorie pour les flux "FAST" Canal+ ou automatiques
+    "💎 CANAL+": [], 
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
-    "📺 RAKUTEN TV": []
+    "📺 RAKUTEN TV": [],
+    "📦 AUTRES (GÉNÉRAL)": [] # Catégorie de repli pour tout le reste
 }
 
 def normalize(text):
@@ -110,11 +111,10 @@ def filter_playlist():
         print(f"Erreur lors du téléchargement : {e}")
         return
 
-    # Extraction des entrées M3U
     entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', content, re.MULTILINE)
     
+    # On initialise avec les clés de CATEGORIES
     output_groups = {cat: [] for cat in CATEGORIES.keys()}
-    output_groups["AUTRES"] = []
 
     for entry in entries:
         lines = entry.splitlines()
@@ -133,7 +133,6 @@ def filter_playlist():
             auto_cat = "📺 SAMSUNG TV PLUS"
         elif "rakuten" in norm_name:
             auto_cat = "📺 RAKUTEN TV"
-        # On ne met en auto "CANAL+" que s'il n'est pas déjà spécifiquement trié dans Sport ou Ciné
         elif "canal" in norm_name and not any(k in norm_name for k in ["sport", "cinema", "cine"]):
             auto_cat = "💎 CANAL+"
 
@@ -152,7 +151,6 @@ def filter_playlist():
             if not channels: continue
             for display_name, keywords in channels:
                 if any(normalize(k) in norm_name for k in keywords):
-                    # Forcer le nom propre et le groupe
                     new_info = re.sub(r',.*$', f',{display_name}', info_line)
                     if 'group-title="' in new_info:
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', new_info)
@@ -164,8 +162,15 @@ def filter_playlist():
                     break
             if matched: break
         
+        # 3. Si pas de match, on met dans AUTRES
         if not matched:
-            output_groups["AUTRES"].append(entry)
+            new_info = info_line
+            cat_autres = "📦 AUTRES (GÉNÉRAL)"
+            if 'group-title="' in info_line:
+                new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_autres}"', info_line)
+            else:
+                new_info = info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_autres}"')
+            output_groups[cat_autres].append(f"{new_info}\n" + "\n".join(lines[1:]))
 
     # Création du fichier final
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
