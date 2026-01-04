@@ -7,7 +7,6 @@ SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
 # --- DICTIONNAIRE COMPLET ET EXHAUSTIF ---
-# Chaque entrée est [Nom d'affichage souhaité, Mots-clés pour la recherche]
 CATEGORIES = {
     "🇫🇷 TNT": [
         ["TF1", ["TF1"]], ["France 2", ["France 2"]], ["France 3", ["France 3"]], 
@@ -49,23 +48,13 @@ CATEGORIES = {
         ["Science & Vie TV", ["Science & Vie TV"]], ["Animaux", ["Animaux"]], 
         ["Museum TV", ["Museum TV"]], ["Le Figaro TV", ["Le Figaro TV"]], 
         ["Montagne TV", ["Montagne TV"]]
-    ],
-    "🎶 MUSIQUE": [
-        ["MCM", ["MCM"]], ["Mezzo", ["Mezzo"]], ["MTV France", ["MTV France", "MTV"]], 
-        ["Trace Urban", ["Trace Urban"]], ["RFM TV", ["RFM TV"]], ["Melody", ["Melody"]]
-    ],
-    "📍 RÉGIONALES & INTERNATIONAL": [
-        ["BFM Paris", ["BFM Paris"]], ["BFM Lyon", ["BFM Lyon"]],
-        ["TV7 Bordeaux", ["TV7 Bordeaux"]], ["Télénantes", ["Télénantes"]], 
-        ["Vosges TV", ["Vosges TV"]], ["KTO", ["KTO"]], ["Al Aoula", ["Al Aoula"]], 
-        ["France 24", ["France 24"]]
     ]
 }
 
 def normalize(text):
     """ Nettoyage pour comparaison """
     if not text: return ""
-    text = re.sub(r'\(.*?\)', '', text) # Supprime (1080p), (France)
+    text = re.sub(r'\(.*?\)', '', text)
     text = text.lower()
     text = re.sub(r'[^a-z0-9]', '', text)
     return text
@@ -80,10 +69,10 @@ def filter_playlist():
         print(f"Erreur de téléchargement : {e}")
         return
 
-    # Découpage par entrées M3U (un bloc = EXTINF + options éventuelles + URL)
     entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', content, re.MULTILINE)
     
     found_channels = {} # {MainName: {info, url, opts}}
+    other_channels = [] # Liste des chaînes non catégorisées
 
     for entry in entries:
         lines = entry.splitlines()
@@ -91,33 +80,30 @@ def filter_playlist():
         url_line = lines[-1]
         vlc_opts = [l for l in lines[1:-1] if l.startswith("#EXTVLCOPT")]
 
-        # Extraction du nom (après la dernière virgule)
         name_match = re.search(r',([^,]+)$', info_line)
         if not name_match: continue
         raw_name = name_match.group(1).strip()
         clean_raw = normalize(raw_name)
 
-        # Recherche de correspondance dans nos catégories
+        matched = False
         for cat, groups in CATEGORIES.items():
             for item in groups:
                 main_name = item[0]
                 aliases = item[1]
                 
-                # Si on a déjà trouvé une version de cette chaîne, on ignore les suivantes
-                # (Sauf si on veut la meilleure qualité, mais ici on prend la première)
-                if main_name in found_channels: continue
+                if main_name in found_channels: 
+                    if any(normalize(a) == clean_raw for a in aliases):
+                        matched = True # On considère comme traité même si doublon
+                        break
+                    continue
 
                 if any(normalize(a) == clean_raw or normalize(a) in clean_raw for a in aliases):
-                    # Correction de la ligne EXTINF
-                    # 1. Garder le tvg-id original pour Stremio
-                    # 2. Injecter group-title
                     new_info = info_line
                     if 'group-title="' in new_info:
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat}"', new_info)
                     else:
                         new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat}"')
                     
-                    # 3. Forcer le nom final propre
                     new_info = re.sub(r',.*$', f',{main_name}', new_info)
 
                     found_channels[main_name] = {
@@ -125,10 +111,27 @@ def filter_playlist():
                         "url": url_line,
                         "opts": vlc_opts
                     }
-                    # print(f"Match trouvé : {raw_name} -> {main_name}")
+                    matched = True
+                    break
+            if matched: break
+        
+        # Si la chaîne n'a pas été trouvée dans les catégories, on la garde dans "AUTRES"
+        if not matched:
+            other_info = info_line
+            if 'group-title="' in other_info:
+                other_info = re.sub(r'group-title="[^"]+"', 'group-title="🌐 AUTRES CHAÎNES"', other_info)
+            else:
+                other_info = other_info.replace('#EXTINF:-1', '#EXTINF:-1 group-title="🌐 AUTRES CHAÎNES"')
+            
+            other_channels.append({
+                "info": other_info,
+                "url": url_line,
+                "opts": vlc_opts
+            })
 
     # Génération du fichier
     output = ["#EXTM3U"]
+    # 1. Chaînes triées
     for cat in CATEGORIES.keys():
         for item in CATEGORIES[cat]:
             name = item[0]
@@ -137,23 +140,20 @@ def filter_playlist():
                 output.append(chan["info"])
                 output.extend(chan["opts"])
                 output.append(chan["url"])
+    
+    # 2. Toutes les autres chaînes
+    for chan in other_channels:
+        output.append(chan["info"])
+        output.extend(chan["opts"])
+        output.append(chan["url"])
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("\n".join(output))
 
-    # Stats
-    requested_names = [item[0] for cat in CATEGORIES.values() for item in cat]
-    missing = [n for n in requested_names if n not in found_channels]
-    
     print(f"\n--- Résumé ---")
-    print(f"Chaînes trouvées : {len(found_channels)}")
-    print(f"Chaînes manquantes : {len(missing)}")
-    if "TF1" in found_channels:
-        print("✅ TF1 a été correctement identifiée.")
-    else:
-        print("❌ TF1 n'a pas été trouvée dans la source.")
-    if missing:
-        print(f"Manquantes : {', '.join(missing[:10])}...")
+    print(f"Chaînes catégorisées : {len(found_channels)}")
+    print(f"Chaînes ajoutées en vrac : {len(other_channels)}")
+    print(f"Total : {len(found_channels) + len(other_channels)}")
 
 if __name__ == "__main__":
     filter_playlist()
