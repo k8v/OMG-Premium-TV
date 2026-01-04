@@ -80,7 +80,7 @@ CATEGORIES = {
         ["Automoto la chaîne", ["Automoto"]],
         ["Africa 24 Sport", ["Africa 24 Sport"]],
         ["Sport en France", ["Sport en France"]],
-        ["Trace Sport Stars", ["Trace Sport Stars"]]
+        ["Trace Sport Stars", ["Trace Sport Stars"]],
     ],
     "🇧🇪 BELGIQUE": [
         ["La Une", ["La Une"]], 
