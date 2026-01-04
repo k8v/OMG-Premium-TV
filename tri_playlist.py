@@ -5,7 +5,7 @@ import re
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
-# --- DICTIONNAIRE DE TRI (Ordre mis à jour par l'utilisateur) ---
+# --- DICTIONNAIRE DE TRI (Ordre mis à jour et corrigé) ---
 CATEGORIES = {
     "🇫🇷 TNT": [
         ["TF1", ["TF1"]], ["France 2", ["France 2"]], ["France 3", ["France 3"]], 
@@ -39,7 +39,7 @@ CATEGORIES = {
         ["OCS Choc", ["OCS Choc"]],
         ["OCS Géants", ["OCS Géants"]],
         ["Zylo Cinéma", ["Zylo", "Ciné Nanar", "Ciné Western"]]
-	    ],
+	],
     "🧸 JEUNESSE": [
         ["Canal J", ["Canal J"]], ["Disney Channel", ["Disney Channel"]],
         ["Mangas", ["Mangas"]], ["Piwi+", ["Piwi+"]], ["Nickelodeon", ["Nickelodeon"]],
@@ -80,7 +80,7 @@ CATEGORIES = {
         ["Automoto la chaîne", ["Automoto"]],
         ["Africa 24 Sport", ["Africa 24 Sport"]],
         ["Sport en France", ["Sport en France"]],
-        ["Trace Sport Stars", ["Trace Sport Stars"]],
+        ["Trace Sport Stars", ["Trace Sport Stars"]]
     ],
     "🇧🇪 BELGIQUE": [
         ["La Une", ["La Une"]], 
@@ -90,7 +90,7 @@ CATEGORIES = {
         ["Club RTL", ["Club RTL"]], 
         ["Plug RTL", ["Plug RTL"]]
     ],
-    "🇨Header 🇨🇭 SUISSE": [
+    "🇨🇭 SUISSE": [
         ["RTS Un", ["RTS Un"]], 
         ["RTS Deux", ["RTS Deux"]], 
         ["SRF info", ["SRF info"]]
@@ -128,11 +128,10 @@ CATEGORIES = {
 
 def normalize(text):
     if not text: return ""
-    # On garde une version minuscule et sans caractères spéciaux pour le matching
     return re.sub(r'[^a-z0-9]', '', text.lower())
 
 def filter_playlist():
-    print("Démarrage du filtrage avec le nouvel ordre...")
+    print("Démarrage du filtrage...")
     try:
         r = requests.get(SOURCE_URL, timeout=30)
         r.raise_for_status()
@@ -142,29 +141,21 @@ def filter_playlist():
         return
 
     entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', content, re.MULTILINE)
-    
-    # On initialise les listes de résultats dans l'ordre défini par CATEGORIES
     output_groups = {cat: [] for cat in CATEGORIES.keys()}
-    output_groups["📦 AUTRES"] = []
 
     for entry in entries:
         lines = entry.splitlines()
         info_line = lines[0]
-        
         name_match = re.search(r',([^,]+)$', info_line)
         if not name_match: continue
         raw_name = name_match.group(1).strip()
         norm_name = normalize(raw_name)
 
-        # 1. Détection automatique des services spécifiques
+        # 1. Services spécifiques
         auto_cat = None
-        if "pluto" in norm_name:
-            auto_cat = "📺 PLUTO TV"
-        elif "samsung" in norm_name:
-            auto_cat = "📺 SAMSUNG TV PLUS"
-        elif "rakuten" in norm_name:
-            auto_cat = "📺 RAKUTEN TV"
-        # On vérifie "canal+" mais on exclut les chaînes thématiques déjà triées ailleurs
+        if "pluto" in norm_name: auto_cat = "📺 PLUTO TV"
+        elif "samsung" in norm_name: auto_cat = "📺 SAMSUNG TV PLUS"
+        elif "rakuten" in norm_name: auto_cat = "📺 RAKUTEN TV"
         elif "canal+" in norm_name and not any(k in norm_name for k in ["sport", "cinema", "cine", "afrique"]):
             auto_cat = "💎 CANAL+"
 
@@ -177,52 +168,40 @@ def filter_playlist():
             output_groups[auto_cat].append(f"{new_info}\n" + "\n".join(lines[1:]))
             continue
 
-        # 2. Match avec le dictionnaire de catégories
+        # 2. Match Catégories
         matched = False
         for cat_name, channels in CATEGORIES.items():
             if not channels: continue
             for display_name, keywords in channels:
                 if any(normalize(k) in norm_name for k in keywords):
-                    # On renomme proprement la chaîne avec son nom d'affichage
                     new_info = re.sub(r',.*$', f',{display_name}', info_line)
-                    # Mise à jour du groupe
                     if 'group-title="' in new_info:
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', new_info)
                     else:
                         new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_name}"')
-                    
                     output_groups[cat_name].append(f"{new_info}\n" + "\n".join(lines[1:]))
                     matched = True
                     break
             if matched: break
         
-        # 3. Catégorie par défaut
+        # 3. Repli
         if not matched:
-            cat_autres = "📦 AUTRES"
             new_info = info_line
             if 'group-title="' in info_line:
-                new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_autres}"', info_line)
+                new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line)
             else:
-                new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_autres}"')
-            output_groups[cat_autres].append(f"{new_info}\n" + "\n".join(lines[1:]))
+                new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
+            output_groups["📦 AUTRES"].append(f"{new_info}\n" + "\n".join(lines[1:]))
 
-    # Écriture finale
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
-        # On suit l'ordre précis des clés de CATEGORIES défini plus haut
         for cat in CATEGORIES.keys():
             if output_groups[cat]:
                 f.write(f"\n# --- {cat} ---\n")
                 for item in output_groups[cat]:
                     f.write(item + "\n")
-        
-        # On termine par la catégorie AUTRES si elle n'est pas vide
-        if output_groups["📦 AUTRES"]:
-            f.write("\n# --- 📦 AUTRES ---\n")
-            for item in output_groups["📦 AUTRES"]:
-                f.write(item + "\n")
     
-    print(f"Terminé ! Fichier '{OUTPUT_FILE}' généré avec l'ordre demandé.")
+    print(f"Terminé ! Fichier '{OUTPUT_FILE}' généré.")
 
 if __name__ == "__main__":
     filter_playlist()
