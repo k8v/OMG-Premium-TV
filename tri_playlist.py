@@ -5,7 +5,7 @@ import re
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
-# --- DICTIONNAIRE DE TRI (Ordre mis à jour) ---
+# --- DICTIONNAIRE DE TRI (Ordre mis à jour par l'utilisateur) ---
 CATEGORIES = {
     "🇫🇷 TNT": [
         ["TF1", ["TF1"]], ["France 2", ["France 2"]], ["France 3", ["France 3"]], 
@@ -17,20 +17,7 @@ CATEGORIES = {
         ["TF1 Séries Films", ["TF1 Series", "TF1 Séries"]], ["L'Equipe", ["L'Equipe", "L'Équipe"]], 
         ["6ter", ["6ter"]], ["RMC Story", ["RMC Story"]], ["RMC Découverte", ["RMC Découverte"]], 
         ["Chérie 25", ["Chérie 25"]], ["LCI", ["LCI"]], ["Franceinfo", ["Franceinfo"]]
-    ],
-    "⚽ SPORTS": [
-        ["Canal+ Sport", ["Canal+ Sport", "Canal + Sport"]], 
-        ["BeIN Sports 1", ["BeIN Sports 1", "beIN 1"]],
-        ["BeIN Sports 2", ["BeIN Sports 2", "beIN 2"]],
-        ["BeIN Sports 3", ["BeIN Sports 3", "beIN 3"]],
-        ["Eurosport 1", ["Eurosport 1"]], 
-        ["Eurosport 2", ["Eurosport 2"]], 
-        ["Equidia", ["Equidia"]], 
-        ["Automoto la chaîne", ["Automoto"]],
-        ["Africa 24 Sport", ["Africa 24 Sport"]],
-        ["Sport en France", ["Sport en France"]],
-        ["Trace Sport Stars", ["Trace Sport Stars"]]
-    ],
+	],
     "🎬 CINÉMA & SÉRIES": [
         ["Canal+", ["Canal+"]], 
         ["Canal+ Cinema", ["Canal+ Cinema", "Ciné+", "Cine+"]], 
@@ -52,6 +39,49 @@ CATEGORIES = {
         ["OCS Choc", ["OCS Choc"]],
         ["OCS Géants", ["OCS Géants"]],
         ["Zylo Cinéma", ["Zylo", "Ciné Nanar", "Ciné Western"]]
+	    ],
+    "🧸 JEUNESSE": [
+        ["Canal J", ["Canal J"]], ["Disney Channel", ["Disney Channel"]],
+        ["Mangas", ["Mangas"]], ["Piwi+", ["Piwi+"]], ["Nickelodeon", ["Nickelodeon"]],
+        ["Gulli", ["Gulli"]]
+    ],
+    "🌍 DÉCOUVERTE & SAVOIR": [
+        ["Animaux", ["Animaux"]], ["Histoire TV", ["Histoire TV"]],
+        ["Museum TV", ["Museum TV"]], ["National Geographic", ["National Geographic"]],
+        ["Planète+", ["Planète+"]], ["Science & Vie TV", ["Science & Vie TV"]],
+        ["Toute l'Histoire", ["Toute l'Histoire"]], ["Ushuaïa TV", ["Ushuaïa TV"]],
+        ["Montagne TV", ["Montagne TV"]]
+    ],
+    "📰 INFOS & ÉCONOMIE": [
+        ["BFM Business", ["BFM Business"]], ["Euronews", ["Euronews"]],
+        ["France 24", ["France 24"]], ["i24 News", ["i24 News"]],
+        ["Le Figaro TV", ["Le Figaro TV"]], ["La Chaîne Météo", ["Météo"]]
+    ],
+    "🎶 MUSIQUE & DIVERTISSEMENT": [
+        ["MCM", ["MCM"]], ["Mezzo", ["Mezzo"]], ["MTV France", ["MTV"]],
+        ["Trace Africa", ["Trace Africa"]], ["Bblack!", ["Bblack"]]
+    ],
+    "📍 RÉGIONALES & LOCALES": [
+        ["Canal Alpha", ["Canal Alpha"]], ["7ALimoges", ["7ALimoges"]],
+        ["8 Mont-Blanc", ["8 Mont-Blanc"]], ["Alsace 20", ["Alsace 20"]],
+        ["ASTV", ["ASTV"]], ["BFM Lyon", ["BFM Lyon"]], ["BFM Marseille", ["BFM Marseille"]],
+        ["BFM Nice", ["BFM Nice"]], ["BFM Paris", ["BFM Paris"]], ["BIP TV", ["BIP TV"]],
+        ["IDF1", ["IDF1"]], ["Télénantes", ["Télénantes"]], ["TV7 Bordeaux", ["TV7 Bordeaux"]],
+        ["Vosges TV", ["Vosges TV"]], ["Charente Libre", ["Charente Libre"]], ["KTO", ["KTO"]]
+    ],
+    "⚽ SPORTS": [
+        ["Canal+ Sport", ["Canal+ Sport", "Canal + Sport"]], 
+        ["BeIN Sports 1", ["BeIN Sports 1", "beIN 1"]],
+        ["BeIN Sports 2", ["BeIN Sports 2", "beIN 2"]],
+        ["BeIN Sports 3", ["BeIN Sports 3", "beIN 3"]],
+        ["Eurosport 1", ["Eurosport 1"]], 
+        ["Eurosport 2", ["Eurosport 2"]], 
+        ["Equidia", ["Equidia"]], 
+        ["Automoto la chaîne", ["Automoto"]],
+        ["Africa 24 Sport", ["Africa 24 Sport"]],
+        ["Sport en France", ["Sport en France"]],
+        ["Trace Sport Stars", ["Trace Sport Stars"]]
+    ],
     ],
     "🇧🇪 BELGIQUE": [
         ["La Une", ["La Une"]], 
@@ -61,7 +91,7 @@ CATEGORIES = {
         ["Club RTL", ["Club RTL"]], 
         ["Plug RTL", ["Plug RTL"]]
     ],
-    "🇨🇭 SUISSE": [
+    "🇨Header 🇨🇭 SUISSE": [
         ["RTS Un", ["RTS Un"]], 
         ["RTS Deux", ["RTS Deux"]], 
         ["SRF info", ["SRF info"]]
@@ -71,7 +101,7 @@ CATEGORIES = {
         ["TVA", ["TVA"]], 
         ["Noovo", ["Noovo"]], 
         ["LCN", ["LCN"]]
-    ],
+	],
     "🌍 AFRIQUE & DOM-TOM": [
         ["A+", ["A+", "A Plus"]], 
         ["Africa 24", ["Africa 24"]],
@@ -94,15 +124,16 @@ CATEGORIES = {
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
     "📺 RAKUTEN TV": [],
-    "📦 AUTRES (GÉNÉRAL)": [] # Catégorie de repli pour tout le reste
+    "📦 AUTRES": [] # Catégorie de repli pour tout le reste
 }
 
 def normalize(text):
     if not text: return ""
+    # On garde une version minuscule et sans caractères spéciaux pour le matching
     return re.sub(r'[^a-z0-9]', '', text.lower())
 
 def filter_playlist():
-    print("Démarrage du filtrage...")
+    print("Démarrage du filtrage avec le nouvel ordre...")
     try:
         r = requests.get(SOURCE_URL, timeout=30)
         r.raise_for_status()
@@ -113,8 +144,9 @@ def filter_playlist():
 
     entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', content, re.MULTILINE)
     
-    # On initialise avec les clés de CATEGORIES
+    # On initialise les listes de résultats dans l'ordre défini par CATEGORIES
     output_groups = {cat: [] for cat in CATEGORIES.keys()}
+    output_groups["📦 AUTRES"] = []
 
     for entry in entries:
         lines = entry.splitlines()
@@ -125,7 +157,7 @@ def filter_playlist():
         raw_name = name_match.group(1).strip()
         norm_name = normalize(raw_name)
 
-        # 1. Détection automatique des services FAST
+        # 1. Détection automatique des services spécifiques
         auto_cat = None
         if "pluto" in norm_name:
             auto_cat = "📺 PLUTO TV"
@@ -133,7 +165,8 @@ def filter_playlist():
             auto_cat = "📺 SAMSUNG TV PLUS"
         elif "rakuten" in norm_name:
             auto_cat = "📺 RAKUTEN TV"
-        elif "canal" in norm_name and not any(k in norm_name for k in ["sport", "cinema", "cine"]):
+        # On vérifie "canal+" mais on exclut les chaînes thématiques déjà triées ailleurs
+        elif "canal+" in norm_name and not any(k in norm_name for k in ["sport", "cinema", "cine", "afrique"]):
             auto_cat = "💎 CANAL+"
 
         if auto_cat:
@@ -145,13 +178,15 @@ def filter_playlist():
             output_groups[auto_cat].append(f"{new_info}\n" + "\n".join(lines[1:]))
             continue
 
-        # 2. Match avec le dictionnaire fixe
+        # 2. Match avec le dictionnaire de catégories
         matched = False
         for cat_name, channels in CATEGORIES.items():
             if not channels: continue
             for display_name, keywords in channels:
                 if any(normalize(k) in norm_name for k in keywords):
+                    # On renomme proprement la chaîne avec son nom d'affichage
                     new_info = re.sub(r',.*$', f',{display_name}', info_line)
+                    # Mise à jour du groupe
                     if 'group-title="' in new_info:
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', new_info)
                     else:
@@ -162,26 +197,33 @@ def filter_playlist():
                     break
             if matched: break
         
-        # 3. Si pas de match, on met dans AUTRES
+        # 3. Catégorie par défaut
         if not matched:
+            cat_autres = "📦 AUTRES"
             new_info = info_line
-            cat_autres = "📦 AUTRES (GÉNÉRAL)"
             if 'group-title="' in info_line:
                 new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_autres}"', info_line)
             else:
-                new_info = info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_autres}"')
+                new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_autres}"')
             output_groups[cat_autres].append(f"{new_info}\n" + "\n".join(lines[1:]))
 
-    # Création du fichier final
+    # Écriture finale
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
+        # On suit l'ordre précis des clés de CATEGORIES défini plus haut
         for cat in CATEGORIES.keys():
             if output_groups[cat]:
                 f.write(f"\n# --- {cat} ---\n")
                 for item in output_groups[cat]:
                     f.write(item + "\n")
+        
+        # On termine par la catégorie AUTRES si elle n'est pas vide
+        if output_groups["📦 AUTRES"]:
+            f.write("\n# --- 📦 AUTRES ---\n")
+            for item in output_groups["📦 AUTRES"]:
+                f.write(item + "\n")
     
-    print(f"Fichier '{OUTPUT_FILE}' généré avec succès.")
+    print(f"Terminé ! Fichier '{OUTPUT_FILE}' généré avec l'ordre demandé.")
 
 if __name__ == "__main__":
     filter_playlist()
