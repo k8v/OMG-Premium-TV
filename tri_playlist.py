@@ -52,7 +52,7 @@ CATEGORIES = {
 def clean_name(name):
     """ Nettoie le nom pour une comparaison robuste """
     if not name: return ""
-    # Enlever les parenthèses et leur contenu
+    # Enlever les parenthèses et leur contenu (souvent le pays ou la langue)
     name = re.sub(r'\(.*\)', '', name)
     # Enlever les caractères spéciaux et mettre en minuscule
     name = re.sub(r'[^a-zA-Z0-9]', '', name).lower()
@@ -68,41 +68,41 @@ def filter_playlist():
         return
 
     lines = response.text.splitlines()
-    # Utilisation d'un dictionnaire pour stocker les résultats et éviter les doublons d'URLs par catégorie
     organized_content = {cat: [] for cat in CATEGORIES}
+    found_targets = set()
     
     current_info = ""
     for line in lines:
         if line.startswith("#EXTINF"):
             current_info = line
         elif line.startswith("http"):
-            # Extraction du nom de la chaîne après la virgule
+            # Extraction du nom après la virgule
             match = re.search(r',(.+)$', current_info)
             if not match: continue
             
-            raw_name = match.group(1).strip()
-            clean_source_name = clean_name(raw_name)
+            raw_source_name = match.group(1).strip()
+            clean_source = clean_name(raw_source_name)
             
             for cat_name, channel_list in CATEGORIES.items():
                 for target_channel in channel_list:
                     clean_target = clean_name(target_channel)
                     
-                    # Match si le nom cible est contenu dans le nom source ou vice-versa
-                    if clean_target == clean_source_name or (clean_target in clean_source_name and len(clean_target) > 2):
-                        # Mise à jour des métadonnées pour Stremio
-                        # On force le nom d'affichage propre défini dans votre liste
+                    # Logique de matching : correspondance exacte ou inclusion significative
+                    if clean_target == clean_source or (clean_target in clean_source and len(clean_target) > 3):
+                        # On personnalise l'affichage pour Stremio
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', current_info)
+                        # On force le nom "propre" de notre dictionnaire
                         new_info = re.sub(r',(.+)$', f',{target_channel}', new_info)
                         
                         organized_content[cat_name].append((new_info, line))
-                        break # Passer à la ligne suivante une fois trouvé
+                        found_targets.add(target_channel)
+                        break
 
-    # Génération du fichier M3U final
+    # Génération du fichier final
     final_lines = ["#EXTM3U"]
     total_count = 0
     
     for cat in CATEGORIES:
-        # On utilise un set pour ne pas ajouter deux fois la même URL dans la MEME catégorie
         category_urls = set()
         for info, url in organized_content[cat]:
             if url not in category_urls:
@@ -111,10 +111,17 @@ def filter_playlist():
                 category_urls.add(url)
                 total_count += 1
 
+    # Rapport des manquants
+    all_targets = set([chan for sublist in CATEGORIES.values() for chan in sublist])
+    missing = all_targets - found_targets
+    if missing:
+        print(f"\n--- Attention : {len(missing)} chaînes non trouvées dans la source ---")
+        print(", ".join(sorted(list(missing))))
+
     try:
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write("\n".join(final_lines))
-        print(f"Succès ! {total_count} entrées générées dans {OUTPUT_FILE} avec les nouvelles catégories.")
+        print(f"\nSuccès ! {total_count} entrées générées dans {OUTPUT_FILE}.")
     except Exception as e:
         print(f"Erreur lors de l'écriture : {e}")
 
