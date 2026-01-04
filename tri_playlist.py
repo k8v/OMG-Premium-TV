@@ -3,21 +3,22 @@ import re
 import os
 
 # Configuration
-# On définit plusieurs sources pour maximiser les chances de trouver les chaînes de la TNT
+# Utilisation de sources plus robustes et maintenues
 SOURCE_URLS = [
     "https://iptv-org.github.io/iptv/languages/fra.m3u",
-    "https://raw.githubusercontent.com/PolySnd/frenchnews/master/frenchnews.m3u",
-    "https://raw.githubusercontent.com/The-Beast-2/Playlist-IPTV-Gratuit/main/Playlist-IPTV-Gratuit.m3u"
+    "https://raw.githubusercontent.com/mcreal/m3u8-france/master/france.m3u", # Source alternative FR robuste
+    "https://raw.githubusercontent.com/freetv-app/freetv-app/master/playlists/playlist_france.m3u" # Source complémentaire
 ]
 OUTPUT_FILE = "generated.m3u"
 
 # --- DICTIONNAIRE DE TRI MANUEL ---
+# Les listes contiennent [Nom d'affichage, Aliases de recherche...]
 CATEGORIES = {
     "🇫🇷 TNT": [
-        ["TF1"], ["TF1 Séries Films", "TF1 Series"], ["France 2"], ["France 3"], 
-        ["France 4"], ["France 5"], ["Canal+"], ["M6"], ["Arte"], ["LCP"], 
+        ["TF1", "TF 1"], ["TF1 Séries Films", "TF1 Series"], ["France 2"], ["France 3"], 
+        ["France 4"], ["France 5"], ["Canal+", "Canal Plus"], ["M6"], ["Arte"], ["LCP"], 
         ["W9"], ["TMC"], ["TFX"], ["Gulli"], ["BFM TV", "BFMTV"], 
-        ["CNEWS"], ["LCI"], ["Franceinfo", "France info"], ["CSTAR"], 
+        ["CNEWS", "C NEWS"], ["LCI"], ["Franceinfo", "France info"], ["CSTAR", "C STAR"], 
         ["CMI TV"], ["OFTV"], ["L'Equipe", "L'Équipe"], ["6Ter"], 
         ["RMC Story"], ["RMC Découverte"], ["Chérie 25"]
     ],
@@ -61,85 +62,96 @@ CATEGORIES = {
 }
 
 def clean_name(name):
-    """ Nettoie le nom pour une comparaison robuste """
+    """ Nettoie le nom pour une comparaison robuste sans espaces ni caractères spéciaux """
     if not name: return ""
-    name = re.sub(r'\(.*\)', '', name) 
+    # On enlève tout ce qui n'est pas alphanumérique
     name = re.sub(r'[^a-zA-Z0-9]', '', name).lower()
     return name
 
 def filter_playlist():
-    found_targets = {} # Stocke {nom_chaine: (info, url)}
-    all_content = []
-
-    for url in SOURCE_URLS:
-        print(f"Téléchargement de la playlist depuis {url}...")
-        try:
-            response = requests.get(url, timeout=15)
-            response.raise_for_status()
-            all_content.extend(response.text.splitlines())
-        except Exception as e:
-            print(f"Saut de la source {url} : {e}")
-
-    organized_content = {cat: [] for cat in CATEGORIES}
+    found_targets = {} # {nom_chaine_final: (info, url)}
     
+    # Étape 1 : Récupérer tout le contenu des sources
+    all_lines = []
+    for url in SOURCE_URLS:
+        print(f"Téléchargement depuis : {url}")
+        try:
+            r = requests.get(url, timeout=10)
+            if r.status_code == 200:
+                all_lines.extend(r.text.splitlines())
+            else:
+                print(f"Erreur {r.status_code} sur {url}")
+        except Exception as e:
+            print(f"Erreur de connexion sur {url} : {e}")
+
+    # Étape 2 : Analyser le contenu
     current_info = ""
-    for line in all_content:
+    for line in all_lines:
+        line = line.strip()
         if line.startswith("#EXTINF"):
             current_info = line
-        elif line.startswith("http"):
-            match = re.search(r',(.+)$', current_info)
-            if not match: continue
+        elif line.startswith("http") and current_info:
+            # Extraction du nom après la virgule
+            name_match = re.search(r',([^,]+)$', current_info)
+            if not name_match: continue
             
-            raw_source_name = match.group(1).strip()
+            raw_source_name = name_match.group(1).strip()
             clean_source = clean_name(raw_source_name)
             
+            # Vérifier si ce flux correspond à une de nos catégories
             for cat_name, channel_groups in CATEGORIES.items():
                 for aliases in channel_groups:
                     main_name = aliases[0]
                     
-                    # Si on a déjà trouvé cette chaîne, on ne la traite plus (sauf si flux vide)
+                    # Si déjà trouvé, on skip pour cette chaîne (priorité au premier flux trouvé)
                     if main_name in found_targets:
                         continue
 
-                    found_alias = False
+                    is_match = False
                     for alias in aliases:
-                        clean_alias = clean_name(alias)
-                        if clean_alias == clean_source or (clean_alias in clean_source and len(clean_alias) > 3):
-                            found_alias = True
+                        if clean_name(alias) == clean_source:
+                            is_match = True
                             break
                     
-                    if found_alias:
+                    if is_match:
+                        # On injecte la catégorie dans le group-title
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', current_info)
                         if 'group-title="' not in new_info:
                             new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_name}"')
                         
-                        new_info = re.search(r'#EXTINF:[^,]+', new_info).group(0) + f",{main_name}"
-                        found_targets[main_name] = (new_info, line)
-                        organized_content[cat_name].append((new_info, line))
+                        # Uniformisation du nom final
+                        final_info = re.sub(r',[^,]+$', f',{main_name}', new_info)
+                        found_targets[main_name] = (final_info, line, cat_name)
 
-    final_lines = ["#EXTM3U"]
-    total_count = 0
+    # Étape 3 : Organiser et écrire le fichier
+    final_m3u = ["#EXTM3U"]
     
-    for cat in CATEGORIES:
-        for info, stream_url in organized_content[cat]:
-            final_lines.append(info)
-            final_lines.append(stream_url)
-            total_count += 1
+    # On garde l'ordre des catégories défini dans le dictionnaire
+    for cat_name in CATEGORIES:
+        for main_name, data in found_targets.items():
+            info, url, item_cat = data
+            if item_cat == cat_name:
+                final_m3u.append(info)
+                final_m3u.append(url)
 
-    # Rapport final
-    all_targets_list = [group[0] for cat in CATEGORIES.values() for group in cat]
-    missing = [t for t in all_targets_list if t not in found_targets]
-    
+    # Étape 4 : Rapport
+    all_requested = []
+    for cat_list in CATEGORIES.values():
+        for channel_group in cat_list:
+            all_requested.append(channel_group[0])
+            
+    # Déduplication de la liste de contrôle
+    all_requested = list(dict.fromkeys(all_requested))
+    missing = [c for c in all_requested if c not in found_targets]
+
     if missing:
-        print(f"\n--- Chaînes toujours introuvables ({len(missing)}) ---")
+        print(f"\n--- Chaînes manquantes ({len(missing)}) ---")
         print(", ".join(sorted(missing)))
 
-    try:
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            f.write("\n".join(final_lines))
-        print(f"\nSuccès : {total_count} chaînes uniques filtrées dans {OUTPUT_FILE}.")
-    except Exception as e:
-        print(f"Erreur d'écriture : {e}")
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        f.write("\n".join(final_m3u))
+    
+    print(f"\nScript terminé : {len(found_targets)} chaînes enregistrées dans {OUTPUT_FILE}.")
 
 if __name__ == "__main__":
     filter_playlist()
