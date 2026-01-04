@@ -4,8 +4,8 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
-# On utilise le dossier temp interne à OMG
-OUTPUT_FILE = "temp/generated_playlist.m3u"
+# Utilisation d'un chemin absolu pour éviter les erreurs de contexte dans Docker
+OUTPUT_FILE = "/app/temp/generated_playlist.m3u"
 
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
@@ -90,26 +90,29 @@ def filter_playlist():
                 current_info = current_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{new_group}"')
 
             # 5. Nettoyage du nom de la chaîne
-            # On extrait le nom après la virgule
             match = re.search(r',(.+)$', current_info)
             if match:
                 channel_name = match.group(1).strip()
-                # Supprime les (France), (Belgium), etc.
                 channel_name = re.sub(r'\s?\(.*\)', '', channel_name).strip()
-                # On remplace l'ancien nom par le nouveau dans current_info
                 current_info = current_info[:match.start(1)] + channel_name
 
             filtered_lines.append(current_info)
             filtered_lines.append(line)
             count += 1
 
-    # Création du dossier temp si absent
-    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+    # Gestion robuste du dossier de sortie
+    try:
+        output_dir = os.path.dirname(OUTPUT_FILE)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, mode=0o777, exist_ok=True)
+            print(f"Dossier créé : {output_dir}")
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write("\n".join(filtered_lines))
-    
-    print(f"Succès ! {count} chaînes triées et nettoyées dans {OUTPUT_FILE}")
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+            f.write("\n".join(filtered_lines))
+        
+        print(f"Succès ! {count} chaînes triées et nettoyées dans {OUTPUT_FILE}")
+    except Exception as e:
+        print(f"Erreur lors de l'écriture du fichier : {e}")
 
 if __name__ == "__main__":
     filter_playlist()
