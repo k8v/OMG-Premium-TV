@@ -4,8 +4,9 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
-# Utilisation d'un chemin relatif qui s'adapte à l'emplacement de l'exécution
-OUTPUT_FILE = "temp/generated_playlist.m3u"
+# On va générer le fichier à deux endroits pour maximiser la détection par l'addon
+OUTPUT_FILE = "generated_playlist.m3u"
+TEMP_FILE = "temp/generated_playlist.m3u"
 
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
@@ -101,19 +102,24 @@ def filter_playlist():
             count += 1
 
     # Gestion de la sortie
+    content = "\n".join(filtered_lines)
+    
     try:
-        # On s'assure que le dossier temp existe dans le répertoire courant
+        # Écriture à la racine (plus de chances d'être vu par l'addon)
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+            f.write(content)
+        
+        # Écriture dans temp au cas où
         if not os.path.exists("temp"):
             os.makedirs("temp", exist_ok=True)
-            print("Dossier 'temp' créé localement.")
-
-        # On tente d'écrire le fichier
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            f.write("\n".join(filtered_lines))
+        with open(TEMP_FILE, "w", encoding="utf-8") as f:
+            f.write(content)
+            
+        print(f"Succès ! {count} chaînes triées.")
+        print(f"Fichiers créés : {os.path.abspath(OUTPUT_FILE)} et {os.path.abspath(TEMP_FILE)}")
         
-        # On affiche le chemin absolu pour le débogage dans les logs
-        abs_path = os.path.abspath(OUTPUT_FILE)
-        print(f"Succès ! {count} chaînes triées dans : {abs_path}")
+        # DEBUG : Lister les fichiers pour voir où ils sont réellement
+        print("Contenu du dossier actuel :", os.listdir('.'))
         
     except Exception as e:
         print(f"Erreur lors de l'écriture : {str(e)}")
