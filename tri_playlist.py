@@ -7,6 +7,7 @@ SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
 # --- DICTIONNAIRE DE TRI MANUEL ---
+# Mis à jour selon vos instructions (retrait de D8, C8, NRJ 12, Public Sénat)
 CATEGORIES = {
     "🇫🇷 TNT": [
         "TF1", "TF1 Séries Films", "France 2", "France 3", "France 4", "France 5", 
@@ -23,7 +24,7 @@ CATEGORIES = {
         "Canal+ Sport", "Equidia", "Eurosport 1", "Eurosport 2", "L'Equipe", "RMC Sport 1"
     ],
     "🧸 JEUNESSE": [
-        "Canal J", "Disney Channel", "Gulli", "Mangas", "Piwi+"
+        "Canal J", "Disney Channel", "Gulli", "Mangas", "Piwi+", "Game One", "J-One"
     ],
     "🌍 DÉCOUVERTE": [
         "Animaux", "Histoire TV", "Le Figaro TV", "Montagne TV", "Museum TV", 
@@ -52,7 +53,7 @@ CATEGORIES = {
 def clean_name(name):
     """ Nettoie le nom pour une comparaison robuste """
     if not name: return ""
-    # Enlever les parenthèses et leur contenu (souvent le pays ou la langue)
+    # Enlever les parenthèses et leur contenu
     name = re.sub(r'\(.*\)', '', name)
     # Enlever les caractères spéciaux et mettre en minuscule
     name = re.sub(r'[^a-zA-Z0-9]', '', name).lower()
@@ -89,7 +90,7 @@ def filter_playlist():
                     
                     # Logique de matching : correspondance exacte ou inclusion significative
                     if clean_target == clean_source or (clean_target in clean_source and len(clean_target) > 3):
-                        # On personnalise l'affichage pour Stremio
+                        # Personnalisation pour Stremio
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', current_info)
                         # On force le nom "propre" de notre dictionnaire
                         new_info = re.sub(r',(.+)$', f',{target_channel}', new_info)
@@ -121,7 +122,7 @@ def filter_playlist():
     try:
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write("\n".join(final_lines))
-        print(f"\nSuccès ! {total_count} entrées générées dans {OUTPUT_FILE}.")
+        print(f"\nSuccès ! {total_count} entrées générées dans {OUTPUT_FILE} avec les nouvelles catégories.")
     except Exception as e:
         print(f"Erreur lors de l'écriture : {e}")
 
