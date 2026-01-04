@@ -4,13 +4,13 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
-# On va générer le fichier à deux endroits pour maximiser la détection par l'addon
+# Le fichier est généré à la racine pour être détecté immédiatement par l'addon
 OUTPUT_FILE = "generated_playlist.m3u"
-TEMP_FILE = "temp/generated_playlist.m3u"
 
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
     try:
+        # Augmentation du timeout pour les playlists volumineuses
         response = requests.get(SOURCE_URL, timeout=30)
         response.raise_for_status()
     except Exception as e:
@@ -90,7 +90,7 @@ def filter_playlist():
             else:
                 current_info = current_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{new_group}"')
 
-            # 5. Nettoyage du nom de la chaîne
+            # 5. Nettoyage du nom de la chaîne (suppression des tags de pays inutiles)
             match = re.search(r',(.+)$', current_info)
             if match:
                 channel_name = match.group(1).strip()
@@ -101,28 +101,16 @@ def filter_playlist():
             filtered_lines.append(line)
             count += 1
 
-    # Gestion de la sortie
-    content = "\n".join(filtered_lines)
-    
+    # Écriture du fichier final
     try:
-        # Écriture à la racine (plus de chances d'être vu par l'addon)
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            f.write(content)
+            f.write("\n".join(filtered_lines))
         
-        # Écriture dans temp au cas où
-        if not os.path.exists("temp"):
-            os.makedirs("temp", exist_ok=True)
-        with open(TEMP_FILE, "w", encoding="utf-8") as f:
-            f.write(content)
-            
-        print(f"Succès ! {count} chaînes triées.")
-        print(f"Fichiers créés : {os.path.abspath(OUTPUT_FILE)} et {os.path.abspath(TEMP_FILE)}")
-        
-        # DEBUG : Lister les fichiers pour voir où ils sont réellement
-        print("Contenu du dossier actuel :", os.listdir('.'))
+        print(f"Succès ! {count} chaînes triées et prêtes pour Stremio.")
+        print(f"Fichier disponible à la racine : {os.path.abspath(OUTPUT_FILE)}")
         
     except Exception as e:
-        print(f"Erreur lors de l'écriture : {str(e)}")
+        print(f"Erreur lors de l'écriture du fichier : {e}")
 
 if __name__ == "__main__":
     filter_playlist()
