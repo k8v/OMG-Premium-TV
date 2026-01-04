@@ -3,11 +3,12 @@ import re
 import os
 
 # Configuration
+# Note : Ce script dépend de la disponibilité des flux sur la source externe.
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
 # --- DICTIONNAIRE DE TRI MANUEL ---
-# Mis à jour selon vos instructions (retrait de D8, C8, NRJ 12, Public Sénat)
+# Liste basée sur vos préférences réelles, excluant les chaînes non demandées.
 CATEGORIES = {
     "🇫🇷 TNT": [
         "TF1", "TF1 Séries Films", "France 2", "France 3", "France 4", "France 5", 
@@ -51,21 +52,20 @@ CATEGORIES = {
 }
 
 def clean_name(name):
-    """ Nettoie le nom pour une comparaison robuste """
+    """ Nettoie le nom pour une comparaison robuste (minuscules, sans caractères spéciaux) """
     if not name: return ""
-    # Enlever les parenthèses et leur contenu
     name = re.sub(r'\(.*\)', '', name)
-    # Enlever les caractères spéciaux et mettre en minuscule
     name = re.sub(r'[^a-zA-Z0-9]', '', name).lower()
     return name
 
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
     try:
+        # On tente de récupérer la liste brute
         response = requests.get(SOURCE_URL, timeout=30)
         response.raise_for_status()
     except Exception as e:
-        print(f"Erreur de téléchargement : {e}")
+        print(f"Erreur lors de la récupération de la source : {e}")
         return
 
     lines = response.text.splitlines()
@@ -77,54 +77,55 @@ def filter_playlist():
         if line.startswith("#EXTINF"):
             current_info = line
         elif line.startswith("http"):
-            # Extraction du nom après la virgule
+            # Extraction du nom après la virgule dans la ligne #EXTINF
             match = re.search(r',(.+)$', current_info)
             if not match: continue
             
             raw_source_name = match.group(1).strip()
             clean_source = clean_name(raw_source_name)
             
+            # On compare avec notre dictionnaire de catégories
             for cat_name, channel_list in CATEGORIES.items():
                 for target_channel in channel_list:
                     clean_target = clean_name(target_channel)
                     
-                    # Logique de matching : correspondance exacte ou inclusion significative
+                    # Matching intelligent : correspondance exacte ou inclusion
                     if clean_target == clean_source or (clean_target in clean_source and len(clean_target) > 3):
-                        # Personnalisation pour Stremio
+                        # On réécrit la ligne pour inclure le groupe (catégorie) et le nom propre
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', current_info)
-                        # On force le nom "propre" de notre dictionnaire
                         new_info = re.sub(r',(.+)$', f',{target_channel}', new_info)
                         
                         organized_content[cat_name].append((new_info, line))
                         found_targets.add(target_channel)
                         break
 
-    # Génération du fichier final
+    # Génération du fichier M3U final sur le disque du container
     final_lines = ["#EXTM3U"]
     total_count = 0
     
     for cat in CATEGORIES:
         category_urls = set()
         for info, url in organized_content[cat]:
+            # Éviter les doublons de flux pour une même catégorie
             if url not in category_urls:
                 final_lines.append(info)
                 final_lines.append(url)
                 category_urls.add(url)
                 total_count += 1
 
-    # Rapport des manquants
+    # Rapport des chaînes non trouvées dans la source actuelle
     all_targets = set([chan for sublist in CATEGORIES.values() for chan in sublist])
     missing = all_targets - found_targets
     if missing:
-        print(f"\n--- Attention : {len(missing)} chaînes non trouvées dans la source ---")
+        print(f"\n--- Chaînes manquantes dans la source ({len(missing)}) ---")
         print(", ".join(sorted(list(missing))))
 
     try:
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write("\n".join(final_lines))
-        print(f"\nSuccès ! {total_count} entrées générées dans {OUTPUT_FILE} avec les nouvelles catégories.")
+        print(f"\nScript terminé : {total_count} chaînes filtrées et enregistrées dans {OUTPUT_FILE}.")
     except Exception as e:
-        print(f"Erreur lors de l'écriture : {e}")
+        print(f"Erreur d'écriture du fichier : {e}")
 
 if __name__ == "__main__":
     filter_playlist()
