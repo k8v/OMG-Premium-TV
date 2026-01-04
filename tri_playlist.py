@@ -4,8 +4,9 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
-# Le fichier est généré à la racine pour être détecté immédiatement par l'addon
-OUTPUT_FILE = "generated_playlist.m3u"
+# Le nom du fichier doit correspondre à ce que l'addon cherche pour /generated-m3u
+# Dans le doute, on utilise "generated.m3u" qui est le standard pour ce plugin
+OUTPUT_FILE = "generated.m3u"
 
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
