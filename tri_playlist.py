@@ -6,7 +6,7 @@ import os
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
-# --- DICTIONNAIRE DE TRI MANUEL (Mise à jour selon liste utilisateur) ---
+# --- DICTIONNAIRE DE TRI MANUEL ---
 CATEGORIES = {
     "🇫🇷 TNT": [
         "TF1", "TF1 Séries Films", "France 2", "France 3", "France 4", "France 5", 
@@ -31,8 +31,7 @@ CATEGORIES = {
         "Ushuaïa TV", "RMC Découverte"
     ],
     "📰 INFOS": [
-        "BFM Business", "Euronews (Français)", "France 24 (Français)", 
-        "i24 News (Français)", "Le Figaro TV", "LCI", "La Chaîne Météo"
+        "BFM Business", "Euronews", "France 24", "i24 News", "Le Figaro TV", "LCI", "La Chaîne Météo"
     ],
     "🎶 MUSIQUE & DIVERTISSEMENT": [
         "MCM", "Mezzo", "MTV France"
@@ -50,6 +49,15 @@ CATEGORIES = {
     ]
 }
 
+def clean_name(name):
+    """ Nettoie le nom pour une comparaison robuste """
+    if not name: return ""
+    # Enlever les parenthèses et leur contenu
+    name = re.sub(r'\(.*\)', '', name)
+    # Enlever les caractères spéciaux et mettre en minuscule
+    name = re.sub(r'[^a-zA-Z0-9]', '', name).lower()
+    return name
+
 def filter_playlist():
     print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
     try:
@@ -60,6 +68,7 @@ def filter_playlist():
         return
 
     lines = response.text.splitlines()
+    # Utilisation d'un dictionnaire pour stocker les résultats et éviter les doublons d'URLs par catégorie
     organized_content = {cat: [] for cat in CATEGORIES}
     
     current_info = ""
@@ -67,42 +76,45 @@ def filter_playlist():
         if line.startswith("#EXTINF"):
             current_info = line
         elif line.startswith("http"):
+            # Extraction du nom de la chaîne après la virgule
             match = re.search(r',(.+)$', current_info)
             if not match: continue
             
             raw_name = match.group(1).strip()
-            # Nettoyage pour comparaison : on enlève les parenthèses (ex: (Français)) pour la recherche
-            clean_name_for_comp = re.sub(r'\s?\(.*\)', '', raw_name).strip().lower()
+            clean_source_name = clean_name(raw_name)
             
             for cat_name, channel_list in CATEGORIES.items():
                 for target_channel in channel_list:
-                    # On nettoie aussi le nom cible pour la comparaison
-                    target_clean = re.sub(r'\s?\(.*\)', '', target_channel).strip().lower()
+                    clean_target = clean_name(target_channel)
                     
-                    # Logique de correspondance (exacte ou partielle si nom long)
-                    if target_clean == clean_name_for_comp or (target_clean in clean_name_for_comp and len(target_clean) > 3):
-                        # On met à jour le groupe et on force le nom propre défini dans la liste
-                        display_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', current_info)
-                        display_info = re.sub(r',(.+)$', f',{target_channel}', display_info)
+                    # Match si le nom cible est contenu dans le nom source ou vice-versa
+                    if clean_target == clean_source_name or (clean_target in clean_source_name and len(clean_target) > 2):
+                        # Mise à jour des métadonnées pour Stremio
+                        # On force le nom d'affichage propre défini dans votre liste
+                        new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', current_info)
+                        new_info = re.sub(r',(.+)$', f',{target_channel}', new_info)
                         
-                        organized_content[cat_name].append((display_info, line))
-    
+                        organized_content[cat_name].append((new_info, line))
+                        break # Passer à la ligne suivante une fois trouvé
+
     # Génération du fichier M3U final
     final_lines = ["#EXTM3U"]
-    count = 0
+    total_count = 0
+    
     for cat in CATEGORIES:
-        seen_urls = set()
+        # On utilise un set pour ne pas ajouter deux fois la même URL dans la MEME catégorie
+        category_urls = set()
         for info, url in organized_content[cat]:
-            if url not in seen_urls:
+            if url not in category_urls:
                 final_lines.append(info)
                 final_lines.append(url)
-                seen_urls.add(url)
-                count += 1
+                category_urls.add(url)
+                total_count += 1
 
     try:
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             f.write("\n".join(final_lines))
-        print(f"Succès ! {count} entrées générées dans {OUTPUT_FILE} avec les nouvelles catégories.")
+        print(f"Succès ! {total_count} entrées générées dans {OUTPUT_FILE} avec les nouvelles catégories.")
     except Exception as e:
         print(f"Erreur lors de l'écriture : {e}")
 
