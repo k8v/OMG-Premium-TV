@@ -20,96 +20,76 @@ CATEGORIES = {
         ["Chérie 25", ["Chérie 25"]], ["LCI", ["LCI"]], ["Franceinfo", ["Franceinfo"]]
     ],
     "🎬 CINÉMA & SÉRIES": [
-        ["Canal+", ["Canal+", "Canal +", "C+"]], ["AB1", ["AB1"]], ["Action", ["Action"]],
+        ["Canal+", ["Canal Plus", "Canal+", "C+ France"]], ["AB1", ["AB1"]], ["Action", ["Action"]],
         ["Ciné+ Premier", ["Ciné+ Premier", "Cine+ Premier"]], ["Ciné+ Frisson", ["Ciné+ Frisson", "Cine+ Frisson"]],
         ["Ciné+ Emotion", ["Ciné+ Emotion", "Cine+ Emotion", "Emotion'L"]], ["Ciné+ Famiz", ["Ciné+ Famiz", "Cine+ Family"]],
         ["Ciné+ Classic", ["Ciné+ Classic", "Cine+ Classic"]], ["Ciné+ Festival", ["Cine+ Festival"]],
         ["Ciné+ OCS", ["Cine+ OCS", "OCS"]], ["Paramount Channel", ["Paramount Channel"]],
-        ["Warner TV", ["Warner TV", "WarnerTV"]], ["Série Club", ["Série Club", "Serie Club"]],
+        ["Warner TV", ["Warner TV", "WarnerTV", "Warner TV Next"]], ["Série Club", ["Série Club", "Serie Club"]],
         ["TV Breizh", ["TV Breizh"]], ["Téva", ["Téva", "Teva"]], ["RTL9", ["RTL9"]],
         ["Novelas TV", ["Novelas TV", "Afro Novelas", "Fréquence Novelas"]], ["Crime District", ["Crime District", "Into Crime"]],
-        ["Syfy", ["Syfy"]], ["13ème Rue", ["13eme Rue", "13th Street"]], ["Comedie+", ["Comedie+"]],
-        ["Comedy Central", ["Comedy Central", "MyComedy", "Novocomedy"]], ["TCM Cinéma", ["TCM Cinéma", "TCM Cinema"]],
-        ["Polar+", ["Polar+"]], ["Studiocanal", ["Studiocanal"]], ["Disney+", ["Disney+"]],
-        ["Netflix", ["Netflix"]], ["Altice Studio", ["Altice Studio"]], ["France TV Séries", ["France TV Séries"]],
+        ["Syfy", ["Syfy"]], ["Comedie+", ["Comedie+"]], ["Comedy Central", ["Comedy Central", "MyComedy", "Novocomedy"]],
+        ["TCM Cinéma", ["TCM Cinéma", "TCM Cinema"]], ["Polar+", ["Polar+"]], ["Studiocanal", ["Studiocanal"]],
         ["Sony One", ["Sony One"]], ["Scream IN", ["Scream IN"]], ["Wild Side TV", ["Wild Side TV"]],
-        ["Les Cordier", ["Les Cordier"]], ["Les filles d'à côté", ["filles d'à côté"]],
-        ["Ciné Nanar", ["Ciné Nanar"]], ["Ciné Western", ["Ciné Western"]], ["Zylo", ["Zylo"]]
+        ["Ciné Nanar", ["Ciné Nanar"]], ["Ciné Western", ["Ciné Western"]], ["Zylo Cinéma", ["Zylo"]]
     ],
     "🧸 JEUNESSE": [
         ["Disney Channel", ["Disney Channel"]], ["Disney Junior", ["Disney Junior"]],
-        ["Nickelodeon", ["Nickelodeon"]], ["Nickelodeon Junior", ["Nickelodeon Junior"]],
-        ["Nickelodeon Teen", ["Nickelodeon Teen"]], ["Canal J", ["Canal J"]],
-        ["TiJi", ["TiJi"]], ["Piwi+", ["Piwi+"]], ["Télétoon+", ["Télétoon+", "Teletoon"]],
-        ["Boomerang", ["Boomerang"]], ["Cartoon Network", ["Cartoon Network"]],
+        ["Nickelodeon", ["Nickelodeon", "Nickelodeon Junior", "Nickelodeon Teen"]], 
+        ["Canal J", ["Canal J"]], ["TiJi", ["TiJi"]], ["Piwi+", ["Piwi+"]], 
+        ["Télétoon+", ["Télétoon+", "Teletoon"]], ["Boomerang", ["Boomerang"]], 
         ["Mangas", ["Mangas", "ADN TV+"]], ["Gulli", ["Gulli"]], ["TiVi5 Monde", ["TiVi5 Monde"]],
-        ["Ludikids", ["Ludikids"]], ["Bob l'éponge", ["Bob l'éponge", "SpongeBob"]],
-        ["Caillou", ["Caillou"]], ["Amuse Animation", ["Amuse Animation"]],
-        ["Nathan TV", ["Nathan TV"]], ["Berbère Jeunesse", ["Berbère Jeunesse"]]
+        ["Ludikids", ["Ludikids"]], ["Bob l'éponge", ["Bob l'éponge"]], ["Caillou", ["Caillou"]],
+        ["Amuse Animation", ["Amuse Animation"]], ["Nathan TV", ["Nathan TV"]]
     ],
     "🌍 DÉCOUVERTE & SAVOIR": [
         ["Animaux", ["Animaux"]], ["Histoire TV", ["Histoire TV"]], ["Toute l'Histoire", ["Toute l'Histoire"]],
         ["National Geographic", ["National Geographic", "Nat Geo"]], ["Planète+", ["Planète+", "Planete+"]],
         ["Ushuaïa TV", ["Ushuaïa TV", "Ushuaia"]], ["Science & Vie TV", ["Science & Vie TV"]],
-        ["Museum TV", ["Museum TV"]], ["Chasse & Pêche", ["Chasse & Pêche", "Chasse et Peche"]],
-        ["Seasons", ["Seasons"]], ["Trek", ["Trek"]], ["Ultra Nature", ["Ultra Nature"]],
-        ["L'Esprit Sorcier TV", ["L'Esprit Sorcier"]], ["Maison & Travaux TV", ["Maison & Travaux"]],
-        ["Atelier des chefs", ["Atelier des chefs"]], ["Marmiton TV", ["Marmiton"]],
-        ["Top Santé TV", ["Top Santé"]], ["AutoMoto", ["Automoto"]], ["Discovery Channel", ["Discovery Channel"]],
-        ["Investigation Discovery", ["Investigation Discovery", "Dossiers FBI"]], ["NASA TV", ["ESA Web TV", "NASA"]],
-        ["MyZen TV", ["MyZen"]], ["Animaux", ["Animaux"]]
+        ["Museum TV", ["Museum TV"]], ["Chasse & Pêche", ["Chasse & Pêche"]], ["Trek", ["Trek"]],
+        ["Ultra Nature", ["Ultra Nature"]], ["L'Esprit Sorcier TV", ["L'Esprit Sorcier"]],
+        ["Maison & Travaux TV", ["Maison & Travaux"]], ["Atelier des chefs", ["Atelier des chefs"]],
+        ["Marmiton TV", ["Marmiton"]], ["Discovery Channel", ["Discovery Channel"]],
+        ["Investigation Discovery", ["Investigation Discovery", "Dossiers FBI"]]
     ],
     "📰 INFOS & ÉCONOMIE": [
         ["BFM Business", ["BFM Business"]], ["BFM Tech & Co", ["BFM Tech & Co"]], ["Euronews", ["Euronews"]],
         ["France 24", ["France 24"]], ["i24 News", ["i24 News"]], ["Le Figaro TV", ["Le Figaro TV", "Le Figaro Live"]],
-        ["La Chaîne Météo", ["Météo", "La Chaine Meteo"]], ["B Smart TV", ["B Smart"]], ["TV Finance", ["TV Finance"]],
-        ["LCI", ["LCI"]], ["Franceinfo", ["Franceinfo"]], ["CPV TV", ["CCPV TV"]], ["Press TV", ["Press TV"]],
-        ["CGTN French", ["CGTN French"]], ["TR24", ["TR24"]]
+        ["La Chaîne Météo", ["Météo", "La Chaine Meteo"]], ["B Smart TV", ["B Smart"]], ["TV Finance", ["TV Finance"]]
     ],
     "🎶 MUSIQUE & DIVERTISSEMENT": [
-        ["MCM", ["MCM"]], ["MCM Top", ["MCM Top"]], ["MTV", ["MTV"]], ["Mezzo", ["Mezzo"]],
-        ["Melody", ["Melody"]], ["RFM TV", ["RFM TV"]], ["NRJ Hits", ["NRJ Hits"]],
-        ["Trace Urban", ["Trace Urban", "Trace Hip-Hop", "Trace Latina"]], ["Trace Caribbean", ["Trace Caribbean", "Trace Ayiti"]],
-        ["Trace Gospel", ["Trace Gospel"]], ["Bblack!", ["Bblack"]], ["C STAR Hits", ["C Star Hits"]],
-        ["M6 Music", ["M6 Music"]], ["Wataaa TV", ["Wataaa"]], ["Qwest TV", ["Qwest TV"]],
-        ["Fashion TV", ["Fashion TV", "FashionTV"]], ["Clique TV", ["Clique TV"]], ["Culturebox", ["Culturebox"]],
-        ["Juste pour Rire", ["Juste pour Rire"]], ["E!", ["E!"]], ["Télépitchoun", ["Pitchoun"]],
-        ["Berbère Music", ["Berbère Music"]], ["Radio Karaoké", ["Radio Karaoké"]]
+        ["MCM", ["MCM", "MCM Top"]], ["MTV", ["MTV"]], ["Mezzo", ["Mezzo"]], ["Melody", ["Melody"]],
+        ["RFM TV", ["RFM TV"]], ["NRJ Hits", ["NRJ Hits"]], ["Trace Urban", ["Trace Urban", "Trace Hip-Hop", "Trace Latina"]],
+        ["Trace Caribbean", ["Trace Caribbean", "Trace Ayiti"]], ["Trace Gospel", ["Trace Gospel"]],
+        ["Bblack!", ["Bblack"]], ["C STAR Hits", ["C Star Hits"]], ["M6 Music", ["M6 Music"]],
+        ["Wataaa TV", ["Wataaa"]], ["Qwest TV", ["Qwest TV"]], ["Fashion TV", ["Fashion TV", "FashionTV"]],
+        ["Clique TV", ["Clique TV"]], ["Juste pour Rire", ["Juste pour Rire"]]
     ],
     "📍 RÉGIONALES & LOCALES": [
-        ["8 Mont-Blanc", ["8 Mont-Blanc", "Radio Mont Blanc", "TV8 Mont-Blanc"]], ["Alsace 20", ["Alsace 20"]],
-        ["BFM Alsace", ["BFM Alsace"]], ["BFM Lyon", ["BFM Lyon"]], ["BFM Marseille", ["BFM Marseille"]],
-        ["BFM Paris", ["BFM Paris", "BFM Paris Ile-de-France"]], ["BFM Nice", ["BFM Nice", "BFM Cote d'Azur"]],
-        ["BFM Normandie", ["BFM Normandie"]], ["BFM Var", ["BFM Var"]], ["BFM DICI", ["BFM DICI"]],
-        ["BFM Grand Lille", ["BFM Grand Lille"]], ["BFM Grand Littoral", ["BFM Grand Littoral"]],
-        ["Télénantes", ["Télénantes"]], ["TV7 Bordeaux", ["TV7 Bordeaux"]], ["Vosges TV", ["Vosges TV"]],
-        ["KTO", ["KTO", "Chrétiens TV", "HolyGod", "EMCI", "Evangile TV", "DieuTV"]], ["Canal 32", ["Canal 32", "La Chaîne 32"]],
-        ["Télé Grenoble", ["TéléGrenoble"]], ["Wéo", ["Wéo", "Wéo Picardie"]], ["Tébéo", ["Tébéo"]],
-        ["TébéSud", ["TébéSud"]], ["7ALimoges", ["7ALimoges"]], ["Angers Télé", ["Angers Télé"]],
-        ["ASTV", ["ASTV"]], ["BIP TV", ["BIP TV"]], ["LM TV Sarthe", ["LM TV Sarthe"]],
-        ["Maritima TV", ["Maritima"]], ["Matélé", ["ViàMatélé"]], ["TL7", ["TL7"]],
-        ["TVR", ["TVR"]], ["TVPI", ["TVPI"]], ["TV Vendée", ["TV Vendée"]], ["ViàOccitanie", ["ViàOccitanie"]],
-        ["Canal Alpha", ["Canal Alpha"]], ["ILTV", ["ILTV"]], ["Mosaïk Cristal", ["Mosaïk Cristal"]]
+        ["8 Mont-Blanc", ["8 Mont-Blanc", "Radio Mont Blanc", "TV8 Mont-Blanc"]],
+        ["BFM Régions", ["BFM Alsace", "BFM Lyon", "BFM Marseille", "BFM Paris", "BFM Nice", "BFM Cote d'Azur", "BFM Normandie", "BFM Var", "BFM DICI", "BFM Grand Lille", "BFM Grand Littoral"]],
+        ["Télénantes", ["Télénantes"]], ["TV7 Bordeaux", ["TV7 Bordeaux"]], ["Vosges TV", ["Vosges TV", "Vosges Télévision"]],
+        ["KTO", ["KTO", "Chrétiens TV", "HolyGod", "EMCI", "Evangile TV", "DieuTV", "Radio Télé Silo"]],
+        ["Canal 32", ["Canal 32", "La Chaîne 32"]], ["Wéo", ["Wéo", "Wéo Picardie"]], 
+        ["7ALimoges", ["7ALimoges"]], ["Angers Télé", ["Angers Télé"]], ["ASTV", ["ASTV"]],
+        ["BIP TV", ["BIP TV"]], ["LM TV Sarthe", ["LM TV Sarthe"]], ["TL7", ["TL7"]],
+        ["TVR", ["TVR"]], ["Canal Zoom", ["Canal Zoom"]], ["Canal Alpha", ["Canal Alpha"]],
+        ["Mosaïk Cristal", ["Mosaïk Cristal"]], ["IDF1", ["IDF1"]]
     ],
     "⚽ SPORTS": [
         ["Canal+ Sport", ["Canal+ Sport", "Canal+ Foot", "Canal+ MotoGP", "Canal+ Formula 1", "Canal+ Sport 360", "Canal+ Top 14", "Canal+ Premier League"]],
         ["BeIN Sports", ["BeIN Sports", "beIN 1", "beIN 2", "beIN 3"]], ["Eurosport", ["Eurosport"]],
         ["Equidia", ["Equidia"]], ["RMC Sport", ["RMC Sport"]], ["Infosport+", ["Infosport+"]],
-        ["Golf+", ["Golf +", "Golf Channel", "Journal Du Golf"]], ["Foot+", ["Foot+"]],
-        ["Automoto la chaîne", ["Automoto"]], ["Sport en France", ["Sport en France"]],
-        ["MGG TV", ["MGG TV"]], ["Fighting Spirit", ["Fighting Spirit"]], ["RugbyZone", ["RugbyZone"]],
-        ["MultiSports", ["MultiSports"]], ["Africa 24 Sport", ["Africa 24 Sport", "Africa Sports TV"]],
-        ["Persiana Sports", ["Persiana Sports"]], ["NHL Centre Ice", ["NHL Centre Ice"]]
+        ["Golf+", ["Golf +", "Golf Channel"]], ["Africa 24 Sport", ["Africa 24 Sport", "Africa Sports TV"]],
+        ["Sport en France", ["Sport en France"]], ["NHL Centre Ice", ["NHL Centre Ice"]]
     ],
     "🇧🇪 BELGIQUE": [
         ["La Une", ["La Une"]], ["La Deux", ["La Deux"]], ["La Trois", ["La Trois"]], 
         ["RTL-TVI", ["RTL-TVI", "RTL TVI"]], ["Club RTL", ["Club RTL"]], ["Plug RTL", ["Plug RTL"]],
-        ["LN24", ["LN24"]], ["Tipik", ["Tipik"]], ["BX1", ["BX1"]], ["Bouke", ["Bouke"]], ["Bruzz", ["Bruzz"]],
-        ["TeleMB", ["TeleMB"]], ["Trends Z", ["Trends Z"]]
+        ["LN24", ["LN24"]], ["Tipik", ["Tipik"]], ["BX1", ["BX1"]]
     ],
     "🇨🇭 SUISSE": [
         ["RTS Un", ["RTS Un"]], ["RTS Deux", ["RTS Deux"]], ["SRF info", ["SRF info"]],
-        ["Léman Bleu", ["Léman Bleu"]], ["Canal Alpha", ["Canal Alpha"]], ["TeleBielingue", ["TeleBielingue"]],
         ["TVM3", ["TVM3"]], ["Couleur 3", ["Couleur 3"]]
     ],
     "🇨🇦 CANADA / QUÉBEC": [
@@ -119,13 +99,11 @@ CATEGORIES = {
     ],
     "🌍 AFRIQUE & DOM-TOM": [
         ["A+", ["A+", "A Plus"]], ["Africa 24", ["Africa 24"]], ["Africanews", ["Africanews"]], 
-        ["Nollywood TV", ["Nollywood TV"]], ["TV5Monde Afrique", ["TV5Monde Afrique"]], 
+        ["Nollywood TV", ["Nollywood TV"]], ["TV5Monde", ["TV5 Monde", "TV5Monde"]], 
         ["RTB", ["RTB"]], ["RTI", ["RTI"]], ["ORTM", ["ORTM"]], ["2M Monde", ["2M Monde"]],
         ["Antenne Réunion", ["Antenne Réunion"]], ["Bblack! Africa", ["Bblack! Africa"]],
         ["Trace Africa", ["Trace Africa"]], ["Canal 3 Monde", ["Canal 3 Monde"]],
-        ["RTNC", ["RTNC"]], ["RTS 1", ["RTS 1"]], ["TFM", ["TFM"]], ["CRTV", ["CRTV"]],
-        ["Life TV", ["Life TV"]], ["NCI", ["NCI"]], ["Tele Congo", ["Tele Congo"]],
-        ["Télé Péyi", ["Télé Péyi"]], ["ViàGuadeloupe", ["ViàGuadeloupe"]], ["ViàGuyane", ["ViàGuyane"]]
+        ["RTNC", ["RTNC"]], ["RTS 1", ["RTS 1"]], ["TFM", ["TFM"]], ["Life TV", ["Life TV"]]
     ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
@@ -172,11 +150,12 @@ def filter_playlist():
             continue
 
         # 2. Catégories Manuelles
+        # On parcourt les catégories. Dès qu'un match est trouvé, on s'arrête pour cette catégorie.
         for cat_name, channels in CATEGORIES.items():
-            if not channels: continue
+            found_in_cat = False
             for display_name, keywords in channels:
-                if any(normalize(k) in norm_name for k in keywords):
-                    # Mise à jour du nom affiché (si match spécifique) et du groupe
+                # On vérifie si un mot-clé correspond parfaitement ou si le nom normalisé contient le mot-clé normalisé
+                if any(normalize(k) == norm_name or (len(normalize(k)) > 3 and normalize(k) in norm_name) for k in keywords):
                     new_info = re.sub(r',.*$', f',{display_name}', info_line)
                     if 'group-title="' in new_info:
                         new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', new_info)
@@ -185,7 +164,9 @@ def filter_playlist():
                     
                     output_groups[cat_name].append(f"{new_info}\n" + "\n".join(lines[1:]))
                     matched_at_least_once = True
+                    found_in_cat = True
                     break 
+            if found_in_cat: break
         
         # 3. Repli si aucun match
         if not matched_at_least_once:
