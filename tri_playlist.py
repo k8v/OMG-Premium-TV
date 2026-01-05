@@ -6,38 +6,36 @@ import os
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
 OUTPUT_FILE = "generated.m3u"
 
-# --- CONFIGURATION DES CATÉGORIES (Simplifiée pour la détection) ---
-# On garde les noms de ton immense liste pour le filtrage
+# --- CONFIGURATION DES CATÉGORIES ---
+# Les mots-clés servent uniquement à classer la chaîne dans le bon dossier
 CATEGORIES = {
-    "🇫🇷 TNT": ["TF1", "France 2", "France 3", "France 4", "France 5", "M6", "Arte", "C8", "W9", "TMC", "TFX", "NRJ 12", "LCP", "BFM TV", "CNews", "CSTAR", "Gulli", "TF1 Séries Films", "L'Equipe", "6ter", "RMC Story", "RMC Découverte", "Chérie 25", "LCI", "Franceinfo"],
-    "🎬 CINÉMA & SÉRIES": ["Canal+", "Ciné+", "OCS", "Action", "AB1", "RTL9", "Téva", "Paramount Channel", "Warner TV", "Novelas TV", "Crime District", "Série Club", "Syfy", "TV Breizh", "Polar+", "Comedy Central", "Comedie+", "Studiocanal", "TCM Cinéma", "Persiana", "Sony One", "Juste pour Rire", "Les Cordier", "Les filles d'à côté", "Ciné Nanar", "Ciné Western"],
-    "🧸 JEUNESSE": ["Canal J", "Disney Channel", "Mangas", "Piwi+", "Nickelodeon", "TiJi", "Teletoon+", "Boomerang", "Cartoon Network", "TiVi5 Monde", "Gulli", "ADN TV+", "Ludikids", "Caillou", "Bob l'éponge", "Amuse Animation"],
-    "🌍 DÉCOUVERTE & SAVOIR": ["Animaux", "Histoire TV", "Museum TV", "National Geographic", "Planète+", "Science & Vie TV", "Toute l'Histoire", "Ushuaïa TV", "Montagne TV", "Discovery Channel", "Investigation Discovery", "Chasse & Pêche", "Trek", "Seasons", "Ultra Nature", "Maison & Travaux TV", "L'Esprit Sorcier TV", "Marmiton TV"],
-    "📰 INFOS & ÉCONOMIE": ["BFM Business", "Euronews", "France 24", "i24 News", "Le Figaro TV", "La Chaîne Météo", "B Smart TV", "TV Finance", "Africanews"],
-    "🎶 MUSIQUE & DIVERTISSEMENT": ["MCM", "Mezzo", "MTV", "Trace", "Bblack!", "Melody", "RFM TV", "NRJ Hits", "C Star Hits", "M6 Music", "Mouv' TV", "Qwest TV", "Fashion TV", "Clique TV"],
-    "📍 RÉGIONALES & LOCALES": ["Canal Alpha", "7ALimoges", "8 Mont-Blanc", "Alsace 20", "ASTV", "BIP TV", "Télénantes", "TV7 Bordeaux", "Vosges TV", "KTO", "Canal 32", "Wéo", "Tébéo", "TébéSud", "Grand Genève TV", "TVR", "Matélé", "TL7", "Canal Zoom", "Cannes Lérins", "Nancy Web TV"],
-    "⚽ SPORTS": ["Sport", "BeIN Sports", "Eurosport", "Equidia", "Automoto", "RMC Sport", "Golf", "MultiSports", "Foot+", "Fighting Spirit"],
-    "🇧🇪 BELGIQUE": ["La Une", "La Deux", "La Trois", "RTL-TVI", "Club RTL", "Plug RTL", "LN24", "Tipik", "BX1", "Bouke", "Bruzz"],
-    "🇨🇭 SUISSE": ["RTS Un", "RTS Deux", "SRF info", "TVM3", "Léman Bleu"],
-    "🇨🇦 CANADA / QUÉBEC": ["Radio-Canada", "ICI Tele", "ICI RDI", "TVA", "Noovo", "LCN", "Télé-Québec"],
-    "🌍 AFRIQUE & DOM-TOM": ["A+", "Africa 24", "Africanews", "Nollywood", "RTB", "RTI", "ORTM", "2M Monde", "Antenne Réunion", "2STV", "TFM", "Sen TV", "NCI", "Life TV", "Canal 2 International"],
+    "🇫🇷 TNT": ["tf1", "france2", "france3", "france4", "france5", "m6", "arte", "c8", "w9", "tmc", "tfx", "nrj12", "lcp", "bfmtv", "cnews", "cstar", "gulli", "tf1series", "lequipe", "6ter", "rmcstory", "rmcdecouverte", "cherie25", "lci", "franceinfo"],
+    "🎬 CINÉMA & SÉRIES": ["canalplus", "cineplus", "ocs", "action", "ab1", "rtl9", "teva", "paramount", "warner", "novelas", "crimedistrict", "serieclub", "syfy", "tvbreizh", "polar", "comedycentral", "comedie", "studiocanal", "tcm", "persiana", "sony", "justepourrire", "cordier", "fillesdacote", "cinenanar", "cinewestern"],
+    "🧸 JEUNESSE": ["canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge", "amuse"],
+    "🌍 DÉCOUVERTE & SAVOIR": ["animaux", "histoire", "museum", "natgeo", "planete", "sciencevie", "toutehistoire", "ushuaia", "montagne", "discovery", "investigation", "chasse", "trek", "seasons", "ultranature", "maison", "sorcier", "marmiton"],
+    "📰 INFOS & ÉCONOMIE": ["bfmbusiness", "euronews", "france24", "i24", "figaro", "meteo", "bsmart", "tvfinance", "africanews"],
+    "🎶 MUSIQUE & DIVERTISSEMENT": ["mcm", "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique"],
+    "📍 RÉGIONALES & LOCALES": ["canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", "matele", "tl7", "canalzoom", "cannes", "nancy"],
+    "⚽ SPORTS": ["sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", "multisports", "footplus", "fighting"],
+    "🇧🇪 BELGIQUE": ["laune", "ladeux", "latrois", "rtltvi", "clubrtl", "plugrtl", "ln24", "tipik", "bx1", "bouke", "bruzz"],
+    "🇨🇭 SUISSE": ["rtsun", "rtsdeux", "srfinfo", "tvm3", "lemanbleu"],
+    "🇨🇦 CANADA / QUÉBEC": ["radiocanada", "icitelea", "icirdi", "tva", "noovo", "lcn", "telequebec"],
+    "🌍 AFRIQUE & DOM-TOM": ["aplus", "africa24", "africanews", "nollywood", "rtb", "rti", "ortm", "2mmonde", "antennereunion", "2stv", "tfm", "sentv", "nci", "lifetv", "canal2"],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
     "📺 RAKUTEN TV": [],
     "📦 AUTRES": []
 }
 
-def normalize(text):
-    if not text: return ""
-    return re.sub(r'[^a-z0-9]', '', text.lower())
-
-def get_tvg_id(info_line):
-    # Recherche précise de tvg-id="..."
-    match = re.search(r'tvg-id="([^"]+)"', info_line, re.IGNORECASE)
-    return match.group(1) if match else "zzz_no_id"
+def clean_tvg_id(info_line):
+    """Extrait le tvg-id et ne garde que le texte avant le premier point."""
+    match = re.search(r'tvg-id="([^".]+)', info_line, re.IGNORECASE)
+    if match:
+        return match.group(1)
+    return ""
 
 def filter_playlist():
-    print("Démarrage du filtrage...")
+    print("Démarrage du filtrage et du tri par TVG-ID...")
     try:
         r = requests.get(SOURCE_URL, timeout=30)
         r.raise_for_status()
@@ -53,54 +51,50 @@ def filter_playlist():
         lines = entry.splitlines()
         info_line = lines[0]
         
-        # On récupère le nom tel qu'il est dans le fichier source (ex: "Canal 32")
-        name_match = re.search(r',([^,]+)$', info_line)
-        if not name_match: continue
-        original_name = name_match.group(1).strip()
-        norm_name = normalize(original_name)
-        
-        tvg_id = get_tvg_id(info_line)
+        # Extraction du TVG-ID nettoyé (ex: RMCStory)
+        sort_id = clean_tvg_id(info_line)
+        norm_sort_id = sort_id.lower()
 
-        # 1. Services Auto
+        # 1. Services Auto (Pluto, Samsung, etc.)
         auto_cat = None
-        if "pluto" in norm_name: auto_cat = "📺 PLUTO TV"
-        elif "samsungtvplus" in norm_name: auto_cat = "📺 SAMSUNG TV PLUS"
-        elif "rakuten" in norm_name: auto_cat = "📺 RAKUTEN TV"
+        if "pluto" in norm_sort_id: auto_cat = "📺 PLUTO TV"
+        elif "samsung" in norm_sort_id: auto_cat = "📺 SAMSUNG TV PLUS"
+        elif "rakuten" in norm_sort_id: auto_cat = "📺 RAKUTEN TV"
 
         if auto_cat:
             new_info = re.sub(r'group-title="[^"]+"', f'group-title="{auto_cat}"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{auto_cat}"')
-            output_groups[auto_cat].append({'id': tvg_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+            output_groups[auto_cat].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
             continue
 
-        # 2. Attribution par mots-clés (sans renommer la chaîne)
+        # 2. Classement par catégories
         matched = False
         for cat_name, keywords in CATEGORIES.items():
-            if not keywords: continue
-            if any(normalize(k) in norm_name for k in keywords):
-                # On garde original_name, on change juste le groupe
+            # On vérifie si le sort_id contient l'un des mots-clés
+            if any(k in norm_sort_id for k in keywords):
                 if 'group-title="' in info_line:
                     new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', info_line)
                 else:
                     new_info = info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_name}"')
                 
-                output_groups[cat_name].append({'id': tvg_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+                output_groups[cat_name].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
                 matched = True
                 break
         
+        # 3. Repli
         if not matched:
             new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
-            output_groups["📦 AUTRES"].append({'id': tvg_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+            output_groups["📦 AUTRES"].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
 
     # Écriture finale
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
-            # Tri alphabétique par tvg-id au sein de chaque catégorie
-            sorted_channels = sorted(output_groups[cat], key=lambda x: x['id'].lower())
+            # Tri alphabétique basé sur le TVG-ID nettoyé
+            sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'].lower())
             for item in sorted_channels:
                 f.write(item['data'] + "\n")
     
-    print(f"Terminé ! Tri par tvg-id effectué pour {len(entries)} entrées.")
+    print(f"Terminé ! Fichier '{OUTPUT_FILE}' généré.")
 
 if __name__ == "__main__":
     filter_playlist()
