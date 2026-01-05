@@ -53,15 +53,14 @@ CATEGORIES = {
         "arabel", "handicaptv", "mdl.fr", "rmclife"
     ],
     "📍 RÉGIONALES & LOCALES": [
-        "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
+        "20minutestv", "t18.fr", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
         "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", 
         "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "iltv", "telegohelle", 
         "tv3v", "rhonetv", "telebielingue", "nrtv", "bluezoomf", "qu4treliegemedia", 
         "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
         "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
         "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
-        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", 
-        "t18.fr"
+        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre"
     ],
     "⚽ SPORTS": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
@@ -82,6 +81,7 @@ CATEGORIES = {
         "canaldelassemblee", "montrealgreektv", "tvctk"
     ],
     "🌍 AFRIQUE & DOM-TOM": [
+        "atv.gn", "canal3.bf", "cna.dz", "kc2.rw", "ntv.ci", "rtvc.ci", "tvlacapitale.ci", "mta9africa",
         "aplus", "africa24", "africanews", "nollywood", "rtb", "rti", "ortm", "2mmonde", 
         "antennereunion", "2stv", "tfm", "sentv", "nci", "lifetv", "canal2", "benietv", 
         "beninwebtv", "bossbrotherstv", "cbctv", "ccpvtelevision", "centelevision", "crtv", 
@@ -91,17 +91,19 @@ CATEGORIES = {
         "rtnc3", "rtvs1", "senewebtv", "senjeunestv", "telecongo", "telesud", "tm1tv", 
         "tnh", "tv2", "tvcbenin", "tvt", "vision4", "yegletv", "etv", "fusiontv", "tntv", 
         "telepeyi", "a12tv", "actv.tg", "adotv", "afrique54", "afromagic", "afroturk", 
-        "antennea", "atv.gn", "burkinainfo", "cam10", "canaf54", "canal3.bf", "chabibatv", 
-        "championtv", "cheriflatv", "cna.dz", "compassiontv", "congoplanet", "degatv", 
+        "antennea", "cam10", "canaf54", "chabibatv", 
+        "championtv", "cheriflatv", "compassiontv", "congoplanet", "degatv", 
         "diaspora24", "digitalcongo", "douniatv", "fasso", "haitinews", "hmipromz", 
         "identite", "ivoirechannel", "kaback", "kajou", "kalac", "lauradave", "lougatv", 
         "madertv", "medi1tv", "mikuba", "mytv", "nazalis", "nessma", "nietatv", "novelachannel", 
-        "ntv.ci", "numerica", "nwmagazine", "onenation", "playtv", "pstvhd", "pvs", "rtjva", 
+        "numerica", "nwmagazine", "onenation", "playtv", "pstvhd", "pvs", "rtjva", 
         "rwanda", "saraounia", "smatogo", "storychannel", "sunulabel", "taltv", "teleboston", 
         "telehaiti", "labrise", "telelouange", "telemaroc", "telemasters", "telemusik", 
         "telepacific", "telepam", "telesahel", "teletchad", "televariete", "telezoukla", 
         "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one",
-        "kc2.rw", "ntv.ci", "rtvc.ci", "tvlacapitale.ci", "mta9africa", "otv.lb"
+        "mta1world", "mta2europe", "mta4africa", "mta8africa", "otv.lb",
+        "turkmenistan", "tv5mondeasia", "tv5mondeeurope", "tv5mondefrance", "tv5mondelatin", 
+        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1"
     ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
@@ -114,7 +116,7 @@ def clean_tvg_id(info_line):
     return match.group(1) if match else ""
 
 def filter_playlist():
-    print("Démarrage du filtrage...")
+    print("Démarrage du filtrage ultime...")
     try:
         r = requests.get(SOURCE_URL, timeout=30)
         r.raise_for_status()
@@ -165,11 +167,12 @@ def filter_playlist():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
+            # Tri alphabétique par le nom propre extrait du tvg-id
             sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'].lower())
             for item in sorted_channels:
                 f.write(item['data'] + "\n")
     
-    print(f"Playlist '{OUTPUT_FILE}' générée avec succès !")
+    print(f"Playlist '{OUTPUT_FILE}' générée avec succès sur ton VPS !")
 
 if __name__ == "__main__":
     filter_playlist()
