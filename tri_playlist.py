@@ -17,82 +17,47 @@ CATEGORIES = {
         "canalplus", "cineplus", "ocs", "action", "ab1", "rtl9", "teva", "paramount", 
         "warner", "novelas", "crimedistrict", "serieclub", "syfy", "tvbreizh", "polar", 
         "comedycentral", "comedie", "studiocanal", "tcm", "persiana", "sony", "justepourrire", 
-        "cordier", "fillesdacote", "cinenanar", "cinewestern", "wildsidetv", "dossiersfbi", 
-        "novo19", "bbcdrama", "degrassi", "heleneetlesgarcons", "lemiracledelamour", 
-        "lesanneesfac", "lesnouveauxdetectives", "louislabrocante", "screamin", "theasylum", 
-        "walkertexasranger", "yaquelaveritequicompte", "instantsaga", "seriemax", "emotionl", "ab3"
+        "intocrime", "rmclife", "t18", "ab3"
     ],
     "🧸 JEUNESSE": [
         "canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", 
-        "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge", 
-        "amuse", "bubbleguppies", "mbc3", "angelaanaconda", "avatar", "babyfirst", 
-        "doratv", "inazumaeleven", "sabrina", "tortuesninja", "victorious", "amouyazid"
+        "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge"
     ],
     "🌍 DÉCOUVERTE & SAVOIR": [
         "animaux", "histoire", "museum", "natgeo", "planete", "sciencevie", "toutehistoire", 
         "ushuaia", "montagne", "discovery", "investigation", "chasse", "trek", "seasons", 
-        "ultranature", "maison", "sorcier", "marmiton", "myzentv", "geopolistv", "sosdocteur", 
-        "bebtv", "3abn", "amanitv", "ecclesiatv", "ewtn", "haditv", "iqraa", "manaeglise", 
-        "metanoiatv", "sophiatv", "telepace", "chandel", "divinamour", "dynamicgospel", 
-        "emcitv", "faith", "hope", "kto", "revelation", "shilo", "wisdom", "religion"
+        "ultranature", "maison", "sorcier", "marmiton", "myzentv", "handicaptv", "mensuptv", 
+        "mdl", "naturaltv", "tv5mondestyle", "televisionespoir47"
     ],
     "📰 INFOS & ÉCONOMIE": [
         "bfmbusiness", "euronews", "france24", "i24", "figaro", "meteo", "bsmart", 
         "tvfinance", "africanews", "cgtnfrench", "presstvfrench", "nwinfo", "nweconomie", 
-        "bfm2", "bfmtechco", "tr24television", "rtfrance", "business24", "burkinainfo", "franceinfo"
+        "rtfrance", "lemediatv", "publicsenat", "francophonie24", "cna.dz", "tv5mondeinfo"
     ],
     "🎶 MUSIQUE & DIVERTISSEMENT": [
         "mcm", "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", 
-        "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "gong", "d5music", 
-        "a2imusic", "clubbingtv", "stingray", "radiokaraoke", "funradio", "generations", "tl7"
+        "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "a2imusic", 
+        "franceinter", "sudradio", "radiofrontieres", "rtl2", "funradio", "generations"
     ],
     "📍 RÉGIONALES & LOCALES": [
         "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
         "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", 
-        "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "iltv", "telegohelle", 
-        "tv3v", "rhonetv", "telebielingue", "nrtv", "bluezoomf", "qu4treliegemedia", 
-        "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
-        "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
-        "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
-        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre"
+        "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "arabel", "kanal9", "latele"
     ],
     "⚽ SPORTS": [
-        "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
-        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy"
-    ],
-    "🇧🇪 BELGIQUE": [
-        "laune", "ladeux", "latrois", "rtltvi", "clubrtl", "plugrtl", "ln24", "tipik", 
-        "bx1", "bouke", "bruzz", "belrtl", "rtlzwee", "ab3", "canalz", "radiocontact", "actv"
+        "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", "nhl"
     ],
     "🇨🇭 SUISSE": [
-        "rtsun", "rtsdeux", "srfinfo", "tvm3", "lemanbleu", "couleur3", "rts1", "rts2", 
-        "canal9", "carac", "la-tele", "maxtv", "nrj-leman"
+        "rtsun", "rtsdeux", "srfinfo", "tvm3", "lemanbleu", "couleur3", "rts1", "rts2", "kanal9", "latele"
     ],
     "🇨🇦 CANADA / QUÉBEC": [
-        "radiocanada", "icitelea", "icirdi", "tva", "noovo", "lcn", "telequebec", "tcftv", 
-        "cbaf", "cbft", "cbkf", "cblf", "cboft", "cbuft", "cbvt", "cbwft", "cftmdt", "cftudt", 
-        "civmdt", "cjbrdt", "ckshdt", "cktmdt", "cktvdt", "ctbtv", "assemblee.ca", "legislative"
+        "radiocanada", "tva", "noovo", "lcn", "telequebec", "canaldelassemblee", "montrealgreek", "tvctk"
     ],
     "🌍 AFRIQUE & DOM-TOM": [
-        "aplus", "africa24", "africanews", "nollywood", "rtb", "rti", "ortm", "2mmonde", 
-        "antennereunion", "2stv", "tfm", "sentv", "nci", "lifetv", "canal2", "benietv", 
-        "beninwebtv", "bossbrotherstv", "cbctv", "ccpvtelevision", "centelevision", "crtv", 
-        "d3tv", "dntv", "edentv", "equinoxtv", "evitv", "exploitstv", "foryoutv", "jostvhd", 
-        "kin24", "lbfdrtv", "mbc1", "mbc5", "metropole", "misectv", "mouridetv", "onetv", 
-        "plextv", "publicsntv", "reflettv", "rewmitv", "rtd4", "rtg1", "rtg2", "rtnc", 
-        "rtnc3", "rtvs1", "senewebtv", "senjeunestv", "telecongo", "telesud", "tm1tv", 
-        "tnh", "tv2", "tvcbenin", "tvt", "vision4", "yegletv", "etv", "fusiontv", "tntv", 
-        "telepeyi", "a12tv", "actv.tg", "adotv", "afrique54", "afromagic", "afroturk", 
-        "antennea", "atv.gn", "burkinainfo", "cam10", "canaf54", "canal3.bf", "chabibatv", 
-        "championtv", "cheriflatv", "cna.dz", "compassiontv", "congoplanet", "degatv", 
-        "diaspora24", "digitalcongo", "douniatv", "fasso", "haitinews", "hmipromz", 
-        "identite", "ivoirechannel", "kaback", "kajou", "kalac", "lauradave", "lougatv", 
-        "madertv", "medi1tv", "mikuba", "mytv", "nazalis", "nessma", "nietatv", "novelachannel", 
-        "ntv.ci", "numerica", "nwmagazine", "onenation", "playtv", "pstvhd", "pvs", "rtjva", 
-        "rwanda", "saraounia", "smatogo", "storychannel", "sunulabel", "taltv", "teleboston", 
-        "telehaiti", "labrise", "telelouange", "telemaroc", "telemasters", "telemusik", 
-        "telepacific", "telepam", "telesahel", "teletchad", "televariete", "telezoukla", 
-        "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one"
+        "canal2", "aplus", "africa24", "rtb", "rti", "ortm", "2mmonde", "antennereunion", 
+        "a2inaija", "a2itv", "atv.gn", "canal3.bf", "esaie45", "kc2", "ntv.ci", "otv.lb", 
+        "radiotele", "rlprotv", "rthtv", "rtvc", "telemix", "turkmenistan", "tv5monde", 
+        "tvcarib", "tvfamille", "tvlacapitale", "mta1", "mta2", "mta8", "mta9", "mygospeltv"
     ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
@@ -101,19 +66,21 @@ CATEGORIES = {
 }
 
 def clean_tvg_id(info_line):
+    # Capture tout avant le premier point
     match = re.search(r'tvg-id="([^".]+)', info_line, re.IGNORECASE)
     return match.group(1) if match else ""
 
 def filter_playlist():
-    print("Démarrage du filtrage ultime...")
+    print("Analyse de la source IPTV-org...")
     try:
         r = requests.get(SOURCE_URL, timeout=30)
         r.raise_for_status()
         content = r.text
     except Exception as e:
-        print(f"Erreur : {e}")
+        print(f"Erreur réseau : {e}")
         return
 
+    # On découpe par bloc #EXTINF
     entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', content, re.MULTILINE)
     output_groups = {cat: [] for cat in CATEGORIES.keys()}
 
@@ -123,7 +90,7 @@ def filter_playlist():
         sort_id = clean_tvg_id(info_line)
         norm_sort_id = sort_id.lower()
 
-        # 1. Services Auto (Pluto/Samsung/Rakuten)
+        # 1. Services Auto
         auto_cat = None
         if "pluto" in norm_sort_id: auto_cat = "📺 PLUTO TV"
         elif "samsung" in norm_sort_id: auto_cat = "📺 SAMSUNG TV PLUS"
@@ -147,21 +114,21 @@ def filter_playlist():
                 matched = True
                 break
         
-        # 3. Repli si rien n'est trouvé
+        # 3. Repli
         if not matched:
             new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
             output_groups["📦 AUTRES"].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
 
-    # Écriture finale
+    # Écriture du fichier final
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
-            # Tri alphabétique par le nom propre extrait du tvg-id
+            # Tri alphabétique par le tvg-id nettoyé
             sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'].lower())
             for item in sorted_channels:
                 f.write(item['data'] + "\n")
     
-    print(f"Playlist '{OUTPUT_FILE}' générée avec succès sur ton VPS !")
+    print(f"Succès ! {len(entries)} chaînes triées dans '{OUTPUT_FILE}'.")
 
 if __name__ == "__main__":
     filter_playlist()
