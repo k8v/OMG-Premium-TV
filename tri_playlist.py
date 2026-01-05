@@ -53,7 +53,7 @@ CATEGORIES = {
         "arabel", "handicaptv", "mdl.fr", "rmclife"
     ],
     "📍 RÉGIONALES & LOCALES": [
-        "20minutestv", "t18.fr", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
+        "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
         "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", 
         "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "iltv", "telegohelle", 
         "tv3v", "rhonetv", "telebielingue", "nrtv", "bluezoomf", "qu4treliegemedia", 
@@ -72,16 +72,16 @@ CATEGORIES = {
     ],
     "🇨🇭 SUISSE": [
         "rtsun", "rtsdeux", "srfinfo", "tvm3", "lemanbleu", "couleur3", "rts1", "rts2", 
-        "canal9", "carac", "la-tele", "maxtv", "nrj-leman", "kanal9.ch", "latele.ch"
+        "canal9", "carac", "la-tele", "maxtv", "nrj-leman", "kanal9", "latele"
     ],
     "🇨🇦 CANADA / QUÉBEC": [
         "radiocanada", "icitelea", "icirdi", "tva", "noovo", "lcn", "telequebec", "tcftv", 
         "cbaf", "cbft", "cbkf", "cblf", "cboft", "cbuft", "cbvt", "cbwft", "cftmdt", "cftudt", 
-        "civmdt", "cjbrdt", "ckshdt", "cktmdt", "cktvdt", "ctbtv", "assemblee.ca", "legislative",
+        "civmdt", "cjbrdt", "ckshdt", "cktmdt", "cktvdt", "ctbtv", "assemblee", "legislative",
         "canaldelassemblee", "montrealgreektv", "tvctk"
     ],
     "🌍 AFRIQUE & DOM-TOM": [
-        "atv.gn", "canal3.bf", "cna.dz", "kc2.rw", "ntv.ci", "rtvc.ci", "tvlacapitale.ci", "mta9africa",
+        "atv", "canal3", "cna", "kc2", "ntv", "rtvc", "tvlacapitale", "mta9africa",
         "aplus", "africa24", "africanews", "nollywood", "rtb", "rti", "ortm", "2mmonde", 
         "antennereunion", "2stv", "tfm", "sentv", "nci", "lifetv", "canal2", "benietv", 
         "beninwebtv", "bossbrotherstv", "cbctv", "ccpvtelevision", "centelevision", "crtv", 
@@ -101,7 +101,7 @@ CATEGORIES = {
         "telehaiti", "labrise", "telelouange", "telemaroc", "telemasters", "telemusik", 
         "telepacific", "telepam", "telesahel", "teletchad", "televariete", "telezoukla", 
         "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one",
-        "mta1world", "mta2europe", "mta4africa", "mta8africa", "otv.lb",
+        "mta1world", "mta2europe", "mta4africa", "mta8africa", "otv",
         "turkmenistan", "tv5mondeasia", "tv5mondeeurope", "tv5mondefrance", "tv5mondelatin", 
         "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1"
     ],
