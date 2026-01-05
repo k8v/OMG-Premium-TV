@@ -37,7 +37,7 @@ CATEGORIES = {
         "metanoiatv", "sophiatv", "telepace", "chandel", "divinamour", "dynamicgospel", 
         "emcitv", "faith", "hope", "kto", "revelation", "shilo", "wisdom", "religion",
         "mygospeltv", "esaie45tele", "radiotele4veh", "radioteleamen", "radiotelefullgospel", 
-        "radioteleevangile", "televisionespoir47", "naturaltv"
+        "radioteleevangile", "televisionespoir47", "naturaltv", "MDL"
     ],
     "📰 INFOS & ÉCONOMIE": [
         "bfmbusiness", "euronews", "france24", "i24", "figaro", "meteo", "bsmart", 
@@ -50,7 +50,7 @@ CATEGORIES = {
         "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "gong", "d5music", 
         "a2imusic", "clubbingtv", "stingray", "radiokaraoke", "funradio", "generations", "tl7",
         "a2inaija", "a2itv", "mensuptv", "rtl2", "sudradio", "franceinter", "radiofrontieres", 
-        "arabel", "handicaptv", "mdl.fr", "rmclife", "MDL"
+        "arabel", "handicaptv", "mdl.fr", "rmclife"
     ],
     "📍 RÉGIONALES & LOCALES": [
         "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
