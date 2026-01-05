@@ -50,7 +50,7 @@ CATEGORIES = {
         "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "gong", "d5music", 
         "a2imusic", "clubbingtv", "stingray", "radiokaraoke", "funradio", "generations", "tl7",
         "a2inaija", "a2itv", "mensuptv", "rtl2", "sudradio", "franceinter", "radiofrontieres", 
-        "arabel", "handicaptv", "mdl.fr", "rmclife"
+        "arabel", "handicaptv", "mdl.fr", "rmclife", "MDL"
     ],
     "📍 RÉGIONALES & LOCALES": [
         "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
@@ -103,7 +103,7 @@ CATEGORIES = {
         "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one",
         "mta1world", "mta2europe", "mta4africa", "mta8africa", "otv",
         "turkmenistan", "tv5mondeasia", "tv5mondeeurope", "tv5mondefrance", "tv5mondelatin", 
-        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1"
+        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1", "MTA5Africa"
     ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
