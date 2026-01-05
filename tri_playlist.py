@@ -37,7 +37,7 @@ CATEGORIES = {
         "metanoiatv", "sophiatv", "telepace", "chandel", "divinamour", "dynamicgospel", 
         "emcitv", "faith", "hope", "kto", "revelation", "shilo", "wisdom", "religion",
         "mygospeltv", "esaie45tele", "radiotele4veh", "radioteleamen", "radiotelefullgospel", 
-        "radioteleevangile", "televisionespoir47", "naturaltv", "MDL"
+        "radioteleevangile", "televisionespoir47", "naturaltv", "mdl"
     ],
     "📰 INFOS & ÉCONOMIE": [
         "bfmbusiness", "euronews", "france24", "i24", "figaro", "meteo", "bsmart", 
@@ -103,7 +103,7 @@ CATEGORIES = {
         "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one",
         "mta1world", "mta2europe", "mta4africa", "mta8africa", "otv",
         "turkmenistan", "tv5mondeasia", "tv5mondeeurope", "tv5mondefrance", "tv5mondelatin", 
-        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1", "MTA5Africa"
+        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1", "mta5africa"
     ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
