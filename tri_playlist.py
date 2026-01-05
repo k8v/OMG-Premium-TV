@@ -60,7 +60,8 @@ CATEGORIES = {
         "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
         "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
         "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
-        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", "t18.fr"
+        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", 
+        "t18.fr"
     ],
     "⚽ SPORTS": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
@@ -100,10 +101,7 @@ CATEGORIES = {
         "telehaiti", "labrise", "telelouange", "telemaroc", "telemasters", "telemusik", 
         "telepacific", "telepam", "telesahel", "teletchad", "televariete", "telezoukla", 
         "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one",
-        "atv.gn", "canal3.bf", "cna.dz", "kc2.rw", "ntv.ci", "rlprotv", "rtvc.ci", "tvlacapitale.ci",
-        "mta1world", "mta2europe", "mta4africa", "mta8africa", "mta9africa", "otv.lb",
-        "turkmenistan", "tv5mondeasia", "tv5mondeeurope", "tv5mondefrance", "tv5mondelatin", 
-        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1"
+        "kc2.rw", "ntv.ci", "rtvc.ci", "tvlacapitale.ci", "mta9africa", "otv.lb"
     ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
@@ -116,7 +114,7 @@ def clean_tvg_id(info_line):
     return match.group(1) if match else ""
 
 def filter_playlist():
-    print("Démarrage du filtrage ultime...")
+    print("Démarrage du filtrage...")
     try:
         r = requests.get(SOURCE_URL, timeout=30)
         r.raise_for_status()
@@ -167,12 +165,11 @@ def filter_playlist():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
-            # Tri alphabétique par le nom propre extrait du tvg-id
             sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'].lower())
             for item in sorted_channels:
                 f.write(item['data'] + "\n")
     
-    print(f"Playlist '{OUTPUT_FILE}' générée avec succès sur ton VPS !")
+    print(f"Playlist '{OUTPUT_FILE}' générée avec succès !")
 
 if __name__ == "__main__":
     filter_playlist()
