@@ -4,7 +4,7 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/languages/fra.m3u"
-OUTPUT_FILE = "generated.m3u"
+OUTPUT_FILE = "temp/generated_playlist.m3u"
 
 # --- CONFIGURATION DES CATÉGORIES ---
 CATEGORIES = {
@@ -111,68 +111,81 @@ CATEGORIES = {
     "📦 AUTRES": []
 }
 
-def clean_tvg_id(info_line):
-    match = re.search(r'tvg-id="([^".]+)', info_line, re.IGNORECASE)
-    return match.group(1) if match else ""
+def normalize(text):
+    if not text: return ""
+    return re.sub(r'[^a-z0-9]', '', text.lower())
 
 def filter_playlist():
-    print("Démarrage du filtrage ultime...")
+    # S'assurer que le dossier temp existe
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+    
+    print(f"Téléchargement de la playlist depuis {SOURCE_URL}...")
     try:
         r = requests.get(SOURCE_URL, timeout=30)
         r.raise_for_status()
         content = r.text
     except Exception as e:
-        print(f"Erreur : {e}")
+        print(f"Erreur lors du téléchargement : {e}")
         return
 
     entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', content, re.MULTILINE)
     output_groups = {cat: [] for cat in CATEGORIES.keys()}
+    count = 0
 
     for entry in entries:
         lines = entry.splitlines()
         info_line = lines[0]
-        sort_id = clean_tvg_id(info_line)
-        norm_sort_id = sort_id.lower()
+        name_match = re.search(r',([^,]+)$', info_line)
+        if not name_match: continue
+        raw_name = name_match.group(1).strip()
+        norm_name = normalize(raw_name)
 
-        # 1. Services Auto (Pluto/Samsung/Rakuten)
+        matched_at_least_once = False
+
+        # 1. Services Automatiques
         auto_cat = None
-        if "pluto" in norm_sort_id: auto_cat = "📺 PLUTO TV"
-        elif "samsung" in norm_sort_id: auto_cat = "📺 SAMSUNG TV PLUS"
-        elif "rakuten" in norm_sort_id: auto_cat = "📺 RAKUTEN TV"
+        if "pluto" in norm_name: auto_cat = "📺 PLUTO TV"
+        elif "samsung tv plus" in norm_name: auto_cat = "📺 SAMSUNG TV PLUS"
+        elif "rakuten tv" in norm_name: auto_cat = "📺 RAKUTEN TV"
+        elif "canal+" in norm_name and not any(k in norm_name for k in ["sport", "cinema", "cine"]):
+            auto_cat = "💎 CANAL+"
 
         if auto_cat:
             new_info = re.sub(r'group-title="[^"]+"', f'group-title="{auto_cat}"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{auto_cat}"')
-            output_groups[auto_cat].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+            output_groups[auto_cat].append(f"{new_info}\n" + "\n".join(lines[1:]))
+            count += 1
             continue
 
-        # 2. Classement par catégories
-        matched = False
-        for cat_name, keywords in CATEGORIES.items():
-            if any(k in norm_sort_id for k in keywords):
-                if 'group-title="' in info_line:
-                    new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', info_line)
-                else:
-                    new_info = info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_name}"')
-                
-                output_groups[cat_name].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
-                matched = True
-                break
+        # 2. Catégories Manuelles
+        for cat_name, channels in CATEGORIES.items():
+            if not channels: continue
+            for display_name, keywords in channels:
+                if any(normalize(k) in norm_name for k in keywords):
+                    new_info = re.sub(r',.*$', f',{display_name}', info_line)
+                    if 'group-title="' in new_info:
+                        new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', new_info)
+                    else:
+                        new_info = new_info.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_name}"')
+                    
+                    output_groups[cat_name].append(f"{new_info}\n" + "\n".join(lines[1:]))
+                    matched_at_least_once = True
+                    count += 1
+                    break
         
-        # 3. Repli si rien n'est trouvé
-        if not matched:
+        # 3. Repli
+        if not matched_at_least_once:
             new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
-            output_groups["📦 AUTRES"].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+            output_groups["📦 AUTRES"].append(f"{new_info}\n" + "\n".join(lines[1:]))
+            count += 1
 
-    # Écriture finale
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
-            # Tri alphabétique par le nom propre extrait du tvg-id
-            sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'].lower())
-            for item in sorted_channels:
-                f.write(item['data'] + "\n")
+            if output_groups[cat]:
+                for item in output_groups[cat]:
+                    f.write(item + "\n")
     
-    print(f"Playlist '{OUTPUT_FILE}' générée avec succès sur ton VPS !")
+    print(f"Succès ! {count} chaînes triées dans {OUTPUT_FILE}")
 
 if __name__ == "__main__":
     filter_playlist()
