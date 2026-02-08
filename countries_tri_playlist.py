@@ -5,7 +5,6 @@ import os
 
 # Configuration
 SOURCE_URL = "https://iptv-org.github.io/iptv/countries/fr.m3u"
-
 OUTPUT_FILE = "generated.m3u"
 
 # --- CONFIGURATION DES CATÉGORIES ---
