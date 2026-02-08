@@ -1,4 +1,4 @@
-#V0.4
+#V0.5
 import requests
 import re
 import os
@@ -53,7 +53,14 @@ CATEGORIES = {
         "esport", "gaming", "gameone", "nolife"
     ],
     "Local": [
-        "bx1", "telenantes", "tv7", "biptv", "matele", "tl7", "monacoinfo", "tvmonaco"
+        "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
+        "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", 
+        "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "iltv", "telegohelle", 
+        "tv3v", "rhonetv", "telebielingue", "nrtv", "bluezoomf", "qu4treliegemedia", 
+        "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
+        "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
+        "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
+        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre"
     ],
     "Musique": [
         "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", 
@@ -81,7 +88,7 @@ CATEGORIES = {
     ],
     "Sport": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
-        "footplus", "fighting", "nhl", "lequipe"
+        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy"
     ],
     "Voyage": [
         "voyage", "ushuaia", "montagne", "travelxp", "echappeesbelles", "ailleurs"
