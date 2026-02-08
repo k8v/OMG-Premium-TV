@@ -10,7 +10,6 @@ OUTPUT_FILE = "generated.m3u"
 
 # --- CONFIGURATION DES CATÉGORIES ---
 CATEGORIES = {
-CATEGORIES = {
     "TNT": [
         "tf1", "france2", "france3", "france4", "france5", "m6", "arte", "c8", "w9", 
         "tmc", "tfx", "nrj12", "lcp", "bfmtv", "cnews", "cstar", "gulli", "tf1series", 
