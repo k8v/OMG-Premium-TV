@@ -1,4 +1,4 @@
-#V0.8
+#V0.9
 import requests
 import re
 import os
@@ -18,7 +18,7 @@ CATEGORIES = {
         "archives", "ina", "retro", "classic"
     ],
     "Art de vivre": [
-        "maison", "marmiton", "myzentv", "artdevivre", "deco", "cuisine"
+        "maison", "marmiton", "myzentv", "artdevivre", "deco", "cuisine", "MensUPTV", "RMCLife"
     ],
     "Cinéma": [
         "canalplus", "cineplus", "ocs", "action", "studiocanal", "tcm", "sony", 
@@ -29,11 +29,11 @@ CATEGORIES = {
     ],
     "Divertissement": [
         "ab1", "rtl9", "teva", "comedycentral", "comedie", "justepourrire", 
-        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong"
+        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong", "Novocomedy", "MonteCarloDigitalTelevision"
     ],
     "Documentaires": [
         "histoire", "planete", "toutehistoire", "investigation", "trek", 
-        "discovery", "rmcdecouverte", "dossiersfbi"
+        "discovery", "rmcdecouverte", "dossiersfbi", "MDL"
     ],
     "Economie": [
         "bfmbusiness", "bsmart", "tvfinance", "nweconomie", "business24"
@@ -66,7 +66,8 @@ CATEGORIES = {
     ],
     "Musique": [
         "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", 
-        "cstarhits", "m6music", "mouv", "clubbingtv", "stingray", "AraBel", "FunRadio", "GenerationsTV"
+        "cstarhits", "m6music", "mouv", "clubbingtv", "stingray", "AraBel", "FunRadio", "GenerationsTV", "QwestTVJazzBeyond", 
+        "RadioKaraoke", "SudRadio", "TZiK", "RadioFrontieres", "RTL2", "zenith"
     ],
     "Nature": [
         "animaux", "natgeo", "ultranature", "seasons", "chasse", "peche", "wild"
@@ -91,7 +92,7 @@ CATEGORIES = {
         "intocrime"
     ],
     "Sociétal": [
-        "kto", "religion", "emcitv", "ewtn", "iqraa", "handicaptv", "publicsenat"
+        "kto", "religion", "emcitv", "ewtn", "iqraa", "handicaptv", "publicsenat", "MyGospelTV"
     ],
     "Sport": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
