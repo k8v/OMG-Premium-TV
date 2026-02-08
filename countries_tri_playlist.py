@@ -1,4 +1,4 @@
-#V0.2
+#V0.1
 import requests
 import re
 import os
@@ -140,7 +140,8 @@ def filter_playlist():
         if "pluto" in norm_sort_id: auto_cat = "📺 PLUTO TV"
         elif "samsung" in norm_sort_id: auto_cat = "📺 SAMSUNG TV PLUS"
         elif "rakuten" in norm_sort_id: auto_cat = "📺 RAKUTEN TV"
-
+        elif "sony" in norm_sort_id: auto_cat = "📺 SONY"
+        
         if auto_cat:
             new_info = re.sub(r'group-title="[^"]+"', f'group-title="{auto_cat}"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{auto_cat}"')
             output_groups[auto_cat].append({'sort_key': sort_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
