@@ -13,7 +13,7 @@ CATEGORIES = {
     "🇫🇷 TNT": [
         "tf1", "france2", "france3", "france4", "france5", "m6", "arte", "c8", "w9", 
         "tmc", "tfx", "nrj12", "lcp", "bfmtv", "cnews", "cstar", "gulli", "tf1series", 
-        "lequipe", "6ter", "rmcstory", "rmcdecouverte", "cherie25", "lci", "franceinfo"
+        "lequipe", "6ter", "rmcstory", "rmcdecouverte", "cherie25", "lci", "franceinfo", "lequipe"
     ],
     "🎬 CINÉMA & SÉRIES": [
         "canalplus", "cineplus", "ocs", "action", "ab1", "rtl9", "teva", "paramount", 
@@ -23,15 +23,19 @@ CATEGORIES = {
         "novo19", "bbcdrama", "degrassi", "heleneetlesgarcons", "lemiracledelamour", 
         "lesanneesfac", "lesnouveauxdetectives", "louislabrocante", "screamin", "theasylum", 
         "walkertexasranger", "yaquelaveritequicompte", "instantsaga", "seriemax", "emotionl", "ab3",
-        "intocrime", "100% cinéma", "box office", "filmrise", "lg 1", "viki", "sci-fi", 
-        "shark tv", "crime scene", "action totale", "blacklist", "thriller", "brefcinéma", "grjngo"
+        "intocrime", "novo19", "100% cinema", "action totale", "box office", "crime scene", 
+        "filmrise", "lg 1", "rakuten viki", "sci-fi", "shark tv", "sony one", 
+        "popcorn", "docstory", "homicide", "mytime movie", "wildside", "nanar", 
+        "western", "emotion", "trailers", "brefcinema", "grjngo", "screamin",
+        "blacklist", "séries comédie", "séries thriller", "zee one", "passion bollywood",
+        "novelas", "telenovela", "blacklist"
     ],
     "🧸 JEUNESSE": [
         "canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", 
         "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge", 
         "amuse", "bubbleguppies", "mbc3", "angelaanaconda", "avatar", "babyfirst", 
-        "doratv", "inazumaeleven", "sabrina", "tortuesninja", "victorious", "amouyazid",
-        "100% kidz", "japanim", "schtroumpfs", "yu-gi-oh"
+        "doratv", "inazumaeleven", "sabrina", "tortuesninja", "victorious", "amouyazid", 
+        "100% kidz", "japanim", "schtroumpfs", "caillou", "yu-gi-oh", "supertoons", "adn"
     ],
     "🌍 DÉCOUVERTE & SAVOIR": [
         "animaux", "histoire", "museum", "natgeo", "planete", "sciencevie", "toutehistoire", 
@@ -41,25 +45,45 @@ CATEGORIES = {
         "metanoiatv", "sophiatv", "telepace", "chandel", "divinamour", "dynamicgospel", 
         "emcitv", "faith", "hope", "kto", "revelation", "shilo", "wisdom", "religion",
         "mygospeltv", "esaie45tele", "radiotele4veh", "radioteleamen", "radiotelefullgospel", 
-        "radioteleevangile", "televisionespoir47", "naturaltv", "mdl", "rustica", "système d", 
-        "chefs", "savoir media", "docstory", "immersion crime", "futura", "bbc earth", "nature time"
+        "radioteleevangile", "televisionespoir47", "naturaltv", "mdl", "lmf5", "rustica", "système d", "chefs", "savoir media", "mhz", "futura", 
+        "esprit sorcier", "science & vie", "echappées belles", "cap terre", 
+        "destination nature", "nature time", "bbc earth", "ina ardivision", "voyages et saveurs",
+        "epicurieux", "echos du monde"
+    ],
+    "📰 INFOS & ÉCONOMIE": [
+        "bfmbusiness", "euronews", "france24", "i24", "figaro", "meteo", "bsmart", 
+        "tvfinance", "africanews", "cgtnfrench", "presstvfrench", "nwinfo", "nweconomie", 
+        "bfm2", "bfmtechco", "tr24television", "rtfrance", "business24", "burkinainfo", "franceinfo",
+        "lemediatv", "publicsenat2424", "tv5mondeinfo", "francophonie24", "le monde en 24 h", "tech&co", "cpac", "cgtn"
     ],
     "🎶 MUSIQUE & DIVERTISSEMENT": [
         "mcm", "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", 
         "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "gong", "d5music", 
         "a2imusic", "clubbingtv", "stingray", "radiokaraoke", "funradio", "generations", "tl7",
         "a2inaija", "a2itv", "mensuptv", "rtl2", "sudradio", "franceinter", "radiofrontieres", 
-        "arabel", "handicaptv", "rmclife", "tzik", "zenith", "novocomedy", "classica", "djazz", 
-        "k-pop", "metal.rocks", "movie music", "now rock", "qello", "sunyfun", "vevo"
+        "arabel", "handicaptv", "rmclife", "tzik", "zenith", "novocomedy", "classica", "djazz", "k-pop", "metal.rocks", "movie music", "now rock", 
+        "qello", "sunyfun", "trace brasil", "vevo", "clubbing", "concept radio", "cirque du soleil"
+    ],
+    "📍 RÉGIONALES & LOCALES": [
+        "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
+        "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", 
+        "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "iltv", "telegohelle", 
+        "tv3v", "rhonetv", "telebielingue", "nrtv", "bluezoomf", "qu4treliegemedia", 
+        "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
+        "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
+        "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
+        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", "icielsass", 
+        "montecarlodigitaltelevision", "actv", "nice côte d'azur", "haute-provence", "cannes lerins", "csur", "basse-terre", "france 3 languedoc"
     ],
     "⚽ SPORTS": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
-        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy",
-        "tennis", "after foot", "mgg esport"
+        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", 
+        "failarmy", "ixpé", "mgg esport", "equidia", "tennis channel", "after foot", "motor racing", "motorvision"
     ],
     "🇧🇪 BELGIQUE": [
         "laune", "ladeux", "latrois", "rtltvi", "clubrtl", "plugrtl", "ln24", "tipik", 
-        "bx1", "bouke", "bruzz", "belrtl", "rtlzwee", "ab3", "canalz", "radiocontact", "actv", "ixpé"
+        "bx1", "bouke", "bruzz", "belrtl", "rtlzwee", "ab3", "canalz", "radiocontact", "actv", 
+        "la une (be)", "actv", "japanim tv (be)", "ixpé (be)", "bam (be)"
     ],
     "🇨🇭 SUISSE": [
         "rtsun", "rtsdeux", "srfinfo", "tvm3", "lemanbleu", "couleur3", "rts1", "rts2", 
@@ -69,7 +93,9 @@ CATEGORIES = {
         "radiocanada", "icitelea", "icirdi", "tva", "noovo", "lcn", "telequebec", "tcftv", 
         "cbaf", "cbft", "cbkf", "cblf", "cboft", "cbuft", "cbvt", "cbwft", "cftmdt", "cftudt", 
         "civmdt", "cjbrdt", "ckshdt", "cktmdt", "cktvdt", "ctbtv", "assemblee", "legislative",
-        "canaldelassemblee", "montrealgreektv", "tvctk"
+        "canaldelassemblee", "montrealgreektv", "tvctk", "savoir media  (ca)", "mhz  (ca)", "tva (ca)", "ici acadie", "ici alberta", 
+        "ici colombie", "ici grand montréal", "ici manitoba", "ici mauricie", 
+        "ici ontario", "ici ottawa", "ici québec", "ici saguenay", "ici saskatchewan", "cpac (ca)", "csur  (ca)"
     ],
     "🌍 AFRIQUE & DOM-TOM": [
         "atv", "canal3", "cna", "kc2", "ntv", "rtvc", "tvlacapitale", "mta9africa",
@@ -94,7 +120,8 @@ CATEGORIES = {
         "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one",
         "mta1world", "mta2europe", "mta4africa", "mta8africa", "otv",
         "turkmenistan", "tv5mondeasia", "tv5mondeeurope", "tv5mondefrance", "tv5mondelatin", 
-        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1", "mta5africa"
+        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1", "mta5africa",
+        "outre-mer la 1ère", "télé peyi", "tahiti web", "fitini"
     ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
