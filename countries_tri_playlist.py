@@ -51,7 +51,7 @@ CATEGORIES = {
         "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "gong", "d5music", 
         "a2imusic", "clubbingtv", "stingray", "radiokaraoke", "funradio", "generations", "tl7",
         "a2inaija", "a2itv", "mensuptv", "rtl2", "sudradio", "franceinter", "radiofrontieres", 
-        "arabel", "handicaptv", "mdl.fr", "rmclife", "tziK", "zenith", "novocomedy"
+        "arabel", "handicaptv", "mdl", "rmclife", "tzik", "zenith", "novocomedy"
     ],
     "📍 RÉGIONALES & LOCALES": [
         "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
