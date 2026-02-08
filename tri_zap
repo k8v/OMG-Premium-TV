@@ -23,13 +23,15 @@ CATEGORIES = {
         "novo19", "bbcdrama", "degrassi", "heleneetlesgarcons", "lemiracledelamour", 
         "lesanneesfac", "lesnouveauxdetectives", "louislabrocante", "screamin", "theasylum", 
         "walkertexasranger", "yaquelaveritequicompte", "instantsaga", "seriemax", "emotionl", "ab3",
-        "intocrime"
+        "intocrime", "100% cinéma", "box office", "filmrise", "lg 1", "viki", "sci-fi", 
+        "shark tv", "crime scene", "action totale", "blacklist", "thriller", "brefcinéma", "grjngo"
     ],
     "🧸 JEUNESSE": [
         "canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", 
         "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge", 
         "amuse", "bubbleguppies", "mbc3", "angelaanaconda", "avatar", "babyfirst", 
-        "doratv", "inazumaeleven", "sabrina", "tortuesninja", "victorious", "amouyazid"
+        "doratv", "inazumaeleven", "sabrina", "tortuesninja", "victorious", "amouyazid",
+        "100% kidz", "japanim", "schtroumpfs", "yu-gi-oh"
     ],
     "🌍 DÉCOUVERTE & SAVOIR": [
         "animaux", "histoire", "museum", "natgeo", "planete", "sciencevie", "toutehistoire", 
@@ -39,38 +41,25 @@ CATEGORIES = {
         "metanoiatv", "sophiatv", "telepace", "chandel", "divinamour", "dynamicgospel", 
         "emcitv", "faith", "hope", "kto", "revelation", "shilo", "wisdom", "religion",
         "mygospeltv", "esaie45tele", "radiotele4veh", "radioteleamen", "radiotelefullgospel", 
-        "radioteleevangile", "televisionespoir47", "naturaltv", "mdl"
-    ],
-    "📰 INFOS & ÉCONOMIE": [
-        "bfmbusiness", "euronews", "france24", "i24", "figaro", "meteo", "bsmart", 
-        "tvfinance", "africanews", "cgtnfrench", "presstvfrench", "nwinfo", "nweconomie", 
-        "bfm2", "bfmtechco", "tr24television", "rtfrance", "business24", "burkinainfo", "franceinfo",
-        "lemediatv", "publicsenat2424", "tv5mondeinfo", "francophonie24"
+        "radioteleevangile", "televisionespoir47", "naturaltv", "mdl", "rustica", "système d", 
+        "chefs", "savoir media", "docstory", "immersion crime", "futura", "bbc earth", "nature time"
     ],
     "🎶 MUSIQUE & DIVERTISSEMENT": [
         "mcm", "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", 
         "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "gong", "d5music", 
         "a2imusic", "clubbingtv", "stingray", "radiokaraoke", "funradio", "generations", "tl7",
         "a2inaija", "a2itv", "mensuptv", "rtl2", "sudradio", "franceinter", "radiofrontieres", 
-        "arabel", "handicaptv", "rmclife", "tzik", "zenith", "novocomedy"
-    ],
-    "📍 RÉGIONALES & LOCALES": [
-        "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
-        "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", 
-        "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "iltv", "telegohelle", 
-        "tv3v", "rhonetv", "telebielingue", "nrtv", "bluezoomf", "qu4treliegemedia", 
-        "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
-        "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
-        "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
-        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", "icielsass", "montecarlodigitaltelevision"
+        "arabel", "handicaptv", "rmclife", "tzik", "zenith", "novocomedy", "classica", "djazz", 
+        "k-pop", "metal.rocks", "movie music", "now rock", "qello", "sunyfun", "vevo"
     ],
     "⚽ SPORTS": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
-        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy"
+        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy",
+        "tennis", "after foot", "mgg esport"
     ],
     "🇧🇪 BELGIQUE": [
         "laune", "ladeux", "latrois", "rtltvi", "clubrtl", "plugrtl", "ln24", "tipik", 
-        "bx1", "bouke", "bruzz", "belrtl", "rtlzwee", "ab3", "canalz", "radiocontact", "actv"
+        "bx1", "bouke", "bruzz", "belrtl", "rtlzwee", "ab3", "canalz", "radiocontact", "actv", "ixpé"
     ],
     "🇨🇭 SUISSE": [
         "rtsun", "rtsdeux", "srfinfo", "tvm3", "lemanbleu", "couleur3", "rts1", "rts2", 
