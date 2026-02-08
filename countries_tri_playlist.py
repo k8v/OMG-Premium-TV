@@ -86,8 +86,7 @@ CATEGORIES = {
     ],
     "Voyage": [
         "voyage", "ushuaia", "montagne", "travelxp", "echappeesbelles", "ailleurs"
-    ]
-}
+    ],
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
     "📺 RAKUTEN TV": [],
