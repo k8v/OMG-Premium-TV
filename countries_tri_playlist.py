@@ -1,4 +1,4 @@
-#V0.5
+#V0.6
 import requests
 import re
 import os
@@ -47,7 +47,9 @@ CATEGORIES = {
     ],
     "Jeunesse": [
         "canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", 
-        "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge"
+        "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge", 
+        "amuse", "bubbleguppies", "mbc3", "angelaanaconda", "avatar", "babyfirst", 
+        "doratv", "inazumaeleven", "sabrina", "tortuesninja", "victorious", "amouyazid"
     ],
     "Jeux": [
         "esport", "gaming", "gameone", "nolife"
