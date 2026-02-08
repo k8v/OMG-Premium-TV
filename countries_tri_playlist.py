@@ -151,7 +151,8 @@ def filter_playlist():
         # 2. Classement par catégories
         matched = False
         for cat_name, keywords in CATEGORIES.items():
-            if any(k in norm_sort_id for k in keywords):
+            #if any(k in norm_sort_id for k in keywords):
+            if any(k.lower() in norm_sort_id for k in keywords):
                 if 'group-title="' in info_line:
                     new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', info_line)
                 else:
