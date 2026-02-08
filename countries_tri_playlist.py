@@ -51,7 +51,7 @@ CATEGORIES = {
         "cstarhits", "m6music", "mouv", "qwest", "fashion", "clique", "gong", "d5music", 
         "a2imusic", "clubbingtv", "stingray", "radiokaraoke", "funradio", "generations", "tl7",
         "a2inaija", "a2itv", "mensuptv", "rtl2", "sudradio", "franceinter", "radiofrontieres", 
-        "arabel", "handicaptv", "mdl.fr", "rmclife", "TZiK", "zenith", "Novocomedy"
+        "arabel", "handicaptv", "mdl.fr", "rmclife", "tziK", "zenith", "novocomedy"
     ],
     "📍 RÉGIONALES & LOCALES": [
         "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
@@ -61,7 +61,7 @@ CATEGORIES = {
         "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
         "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
         "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
-        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", "iciElsass", "MonteCarloDigitalTelevision"
+        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", "icielsass", "montecarlodigitaltelevision"
     ],
     "⚽ SPORTS": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
