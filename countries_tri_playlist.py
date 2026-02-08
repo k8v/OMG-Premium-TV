@@ -109,6 +109,7 @@ CATEGORIES = {
     "📺 PLUTO TV": [],
     "📺 SAMSUNG TV PLUS": [],
     "📺 RAKUTEN TV": [],
+    "📺 SONY": [],
     "📦 AUTRES": []
 }
 
