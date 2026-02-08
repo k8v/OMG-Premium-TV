@@ -29,7 +29,7 @@ CATEGORIES = {
     ],
     "Divertissement": [
         "ab1", "rtl9", "teva", "comedycentral", "comedie", "justepourrire", 
-        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet"
+        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong"
     ],
     "Documentaires": [
         "histoire", "planete", "toutehistoire", "investigation", "trek", 
@@ -43,7 +43,7 @@ CATEGORIES = {
     ],
     "Info": [
         "euronews", "france24", "i24", "figaro", "meteo", "africanews", 
-        "cgtnfrench", "nwinfo", "rtfrance", "lci", "cnews", "bfmtv"
+        "cgtnfrench", "nwinfo", "rtfrance", "lci", "cnews", "bfmtv", "BFM", "FranceInter", "Francophonie24"
     ],
     "Jeunesse": [
         "canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", 
@@ -66,7 +66,7 @@ CATEGORIES = {
     ],
     "Musique": [
         "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", 
-        "cstarhits", "m6music", "mouv", "clubbingtv", "stingray"
+        "cstarhits", "m6music", "mouv", "clubbingtv", "stingray", "AraBel", "FunRadio", "GenerationsTV"
     ],
     "Nature": [
         "animaux", "natgeo", "ultranature", "seasons", "chasse", "peche", "wild"
@@ -81,9 +81,14 @@ CATEGORIES = {
         "sciencevie", "discovery", "explora", "curiosity"
     ],
     "Séries-Films": [
-        "paramount", "warner", "novelas", "crimedistrict", "serieclub", "syfy", 
-        "tvbreizh", "polar", "cordier", "fillesdacote", "bbcdrama", "degrassi", 
-        "heleneetlesgarcons", "lemiracledelamour", "seriemax", "intocrime"
+        "canalplus", "cineplus", "ocs", "action", "ab1", "rtl9", "teva", "paramount", 
+        "warner", "novelas", "crimedistrict", "serieclub", "syfy", "tvbreizh", "polar", 
+        "comedycentral", "comedie", "studiocanal", "tcm", "persiana", "sony", "justepourrire", 
+        "cordier", "fillesdacote", "cinenanar", "cinewestern", "wildsidetv", "dossiersfbi", 
+        "novo19", "bbcdrama", "degrassi", "heleneetlesgarcons", "lemiracledelamour", 
+        "lesanneesfac", "lesnouveauxdetectives", "louislabrocante", "screamin", "theasylum", 
+        "walkertexasranger", "yaquelaveritequicompte", "instantsaga", "seriemax", "emotionl", "ab3",
+        "intocrime"
     ],
     "Sociétal": [
         "kto", "religion", "emcitv", "ewtn", "iqraa", "handicaptv", "publicsenat"
