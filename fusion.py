@@ -1,25 +1,30 @@
 import requests
+import os
 
 # URLs RAW de tes scripts sur GitHub
 URL_SCRIPT_PAYS = "https://raw.githubusercontent.com/k8v/OMG-Premium-TV/main/countries_tri_playlist.py"
 URL_SCRIPT_ZAP  = "https://raw.githubusercontent.com/k8v/OMG-Premium-TV/main/tri_zap"
 
-def exec_remote_script(url):
-    print(f"--- Recupération de : {url.split('/')[-1]} ---")
+def run_remote(url, name):
+    print(f">>> Lancement de : {name}")
     try:
         response = requests.get(url)
         response.raise_for_status()
-        # On exécute le code python téléchargé dans l'espace global
+        # On force l'exécution dans le contexte actuel
         exec(response.text, globals())
-        print(f"Succès : {url.split('/')[-1]} execute.\n")
+        print(f">>> {name} : OK")
     except Exception as e:
-        print(f"Erreur avec {url} : {e}")
+        print(f"!!! ERREUR avec {name} : {e}")
 
 if __name__ == "__main__":
-    # 1. On lance d'abord le tri zap
-    exec_remote_script(URL_SCRIPT_ZAP)
+    # On se place dans le répertoire de l'app pour être sûr que les scripts
+    # trouvent et écrivent 'playlist.m3u' au bon endroit
+    os.chdir('/app')
     
-    # 2. On lance ensuite le tri pays
-    exec_remote_script(URL_SCRIPT_PAYS)
+    # 1. Filtre par pays
+    run_remote(URL_SCRIPT_PAYS, "TRI PAYS")
     
-    print("Traitement global termine.")
+    # 2. Tri Zapping
+    run_remote(URL_SCRIPT_ZAP, "TRI ZAP")
+    
+    print(">>> FUSION TERMINEE : Vérifiez le nombre de chaînes dans l'interface.")
