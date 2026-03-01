@@ -2,14 +2,15 @@ import requests
 import re
 import os
 
-# Configuration des fichiers de sortie
-OUTPUT_FILE = "playlist.m3u"
+# Configuration du chemin pour ton volume Docker
+# L'addon cherche dans /app/omg d'après tes paramètres
+OUTPUT_FILE = "/app/omg/playlist.m3u"
 
 # Sources
 SOURCE_TVRADIOZAP = "https://tvradiozap.eu/live/g/1/x/vlc/d/tvzeu.m3u"
 SOURCE_IPTV_ORG = "https://iptv-org.github.io/iptv/countries/fr.m3u"
 
-# --- CONFIGURATION DES CATÉGORIES (Scripts 2) ---
+# --- CONFIGURATION DES CATÉGORIES ---
 CATEGORIES = {
     "TNT": [
         "tf1", "france2", "france3", "france4", "france5", "m6", "arte", "c8", "w9", 
@@ -140,12 +141,13 @@ def get_tvg_id(line):
     return match.group(1).lower() if match else ""
 
 def main():
-    if os.path.exists('/app'): os.chdir('/app')
-    final_output = []
+    # S'assurer que le dossier de sortie existe
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+    
     output_groups = {cat: [] for cat in CATEGORIES.keys()}
 
-    # --- PARTIE 1 : SOURCE TVRADIOZAP (Logiciel Script 1) ---
-    print("Traitement de TVRadioZap...")
+    # --- PARTIE 1 : TVRADIOZAP ---
+    print("Download Source 1...")
     try:
         res1 = requests.get(SOURCE_TVRADIOZAP, timeout=30)
         res1.raise_for_status()
@@ -168,14 +170,13 @@ def main():
                     line = line.replace('#EXTINF:', f'#EXTINF:-1 group-title="{new_group}" ')
                 current_inf = line
             elif line.startswith("http") and current_inf:
-                # On ajoute à la catégorie correspondante dans le dictionnaire global
-                grp = "📺 PLUTO TV" if "PLUTO" in current_inf else "📺 SAMSUNG TV PLUS" if "SAMSUNG" in current_inf else "📺 RAKUTEN TV" if "RAKUTEN" in current_inf else "📺 SONY" if "SONY" in current_inf else "📦 AUTRES"
+                grp = new_group # On utilise le groupe détecté juste avant
                 output_groups[grp].append({'sort_key': '00', 'data': f"{current_inf}\n{line}"})
                 current_inf = None
-    except Exception as e: print(f"Erreur Source 1: {e}")
+    except Exception as e: print(f"Error Source 1: {e}")
 
-    # --- PARTIE 2 : SOURCE IPTV-ORG (Logiciel Script 2) ---
-    print("Traitement de IPTV-ORG...")
+    # --- PARTIE 2 : IPTV-ORG ---
+    print("Download Source 2...")
     try:
         res2 = requests.get(SOURCE_IPTV_ORG, timeout=30)
         res2.raise_for_status()
@@ -195,9 +196,10 @@ def main():
             if not matched:
                 new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
                 output_groups["📦 AUTRES"].append({'sort_key': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
-    except Exception as e: print(f"Erreur Source 2: {e}")
+    except Exception as e: print(f"Error Source 2: {e}")
 
-    # --- ECRITURE FINALE ---
+    # --- ECRITURE ---
+    print(f"Writing to {OUTPUT_FILE}...")
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
@@ -205,7 +207,7 @@ def main():
             for item in sorted_channels:
                 f.write(item['data'] + "\n")
     
-    print(f"Fusion terminée ! Fichier '{OUTPUT_FILE}' généré.")
+    print("Done!")
 
 if __name__ == "__main__":
     main()
