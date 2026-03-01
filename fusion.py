@@ -2,15 +2,14 @@ import requests
 import re
 import os
 
-# Configuration du chemin pour ton volume Docker
-# L'addon cherche dans /app/omg d'après tes paramètres
+# Chemin pour le volume Docker Oracle
 OUTPUT_FILE = "/app/omg/playlist.m3u"
 
 # Sources
 SOURCE_TVRADIOZAP = "https://tvradiozap.eu/live/g/1/x/vlc/d/tvzeu.m3u"
 SOURCE_IPTV_ORG = "https://iptv-org.github.io/iptv/countries/fr.m3u"
 
-# --- CONFIGURATION DES CATÉGORIES ---
+# Configuration des Catégories
 CATEGORIES = {
     "TNT": [
         "tf1", "france2", "france3", "france4", "france5", "m6", "arte", "c8", "w9", 
@@ -141,13 +140,11 @@ def get_tvg_id(line):
     return match.group(1).lower() if match else ""
 
 def main():
-    # S'assurer que le dossier de sortie existe
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-    
     output_groups = {cat: [] for cat in CATEGORIES.keys()}
 
-    # --- PARTIE 1 : TVRADIOZAP ---
-    print("Download Source 1...")
+    # --- ÉTAPE 1 : TVRADIOZAP (PRIORITÉ MAX) ---
+    print("Source 1: TVRadioZap...")
     try:
         res1 = requests.get(SOURCE_TVRADIOZAP, timeout=30)
         res1.raise_for_status()
@@ -162,6 +159,7 @@ def main():
                 elif "rakuten" in info_low: new_group = "📺 RAKUTEN TV"
                 elif "sony" in info_low: new_group = "📺 SONY"
                 
+                # Mise à jour du group-title
                 if 'group-title="' in line:
                     start = line.find('group-title="') + 13
                     end = line.find('"', start)
@@ -170,13 +168,13 @@ def main():
                     line = line.replace('#EXTINF:', f'#EXTINF:-1 group-title="{new_group}" ')
                 current_inf = line
             elif line.startswith("http") and current_inf:
-                grp = new_group # On utilise le groupe détecté juste avant
-                output_groups[grp].append({'sort_key': '00', 'data': f"{current_inf}\n{line}"})
+                # On utilise '00_' pour que le tri alphabétique les place en haut
+                output_groups[new_group].append({'sort_key': f"00_{current_inf}", 'data': f"{current_inf}\n{line}"})
                 current_inf = None
-    except Exception as e: print(f"Error Source 1: {e}")
+    except Exception as e: print(f"Erreur Source 1: {e}")
 
-    # --- PARTIE 2 : IPTV-ORG ---
-    print("Download Source 2...")
+    # --- ÉTAPE 2 : IPTV-ORG ---
+    print("Source 2: IPTV-org...")
     try:
         res2 = requests.get(SOURCE_IPTV_ORG, timeout=30)
         res2.raise_for_status()
@@ -196,18 +194,18 @@ def main():
             if not matched:
                 new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
                 output_groups["📦 AUTRES"].append({'sort_key': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
-    except Exception as e: print(f"Error Source 2: {e}")
+    except Exception as e: print(f"Erreur Source 2: {e}")
 
-    # --- ECRITURE ---
-    print(f"Writing to {OUTPUT_FILE}...")
+    # --- ÉCRITURE FINALE ---
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
+            # Tri par sort_key (les '00_' passeront avant les noms normaux)
             sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'])
             for item in sorted_channels:
                 f.write(item['data'] + "\n")
     
-    print("Done!")
+    print(f"Playlist générée : {OUTPUT_FILE}")
 
 if __name__ == "__main__":
     main()
