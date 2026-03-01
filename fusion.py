@@ -1,30 +1,211 @@
 import requests
+import re
 import os
 
-# URLs RAW de tes scripts sur GitHub
-URL_SCRIPT_PAYS = "https://raw.githubusercontent.com/k8v/OMG-Premium-TV/main/countries_tri_playlist.py"
-URL_SCRIPT_ZAP  = "https://raw.githubusercontent.com/k8v/OMG-Premium-TV/main/tri_zap"
+# Configuration des fichiers de sortie
+OUTPUT_FILE = "playlist.m3u"
 
-def run_remote(url, name):
-    print(f">>> Lancement de : {name}")
+# Sources
+SOURCE_TVRADIOZAP = "https://tvradiozap.eu/live/g/1/x/vlc/d/tvzeu.m3u"
+SOURCE_IPTV_ORG = "https://iptv-org.github.io/iptv/countries/fr.m3u"
+
+# --- CONFIGURATION DES CATÉGORIES (Scripts 2) ---
+CATEGORIES = {
+    "TNT": [
+        "tf1", "france2", "france3", "france4", "france5", "m6", "arte", "c8", "w9", 
+        "tmc", "tfx", "nrj12", "lcp", "bfmtv", "cnews", "cstar", "gulli", "tf1series", 
+        "lequipe", "6ter", "rmcstory", "rmcdecouverte", "cherie25", "lci", "franceinfo"
+    ],
+    "Archives": [
+        "archives", "ina", "retro", "classic"
+    ],
+    "Art de vivre": [
+        "maison", "marmiton", "myzentv", "artdevivre", "deco", "cuisine", "MensUPTV", "RMCLife"
+    ],
+    "Cinéma": [
+        "canalplus", "cineplus", "ocs", "action", "studiocanal", "tcm", "sony", 
+        "cinenanar", "cinewestern", "wildsidetv", "screamin", "theasylum", "emotionl"
+    ],
+    "Culture": [
+        "museum", "culturebox", "expo", "art"
+    ],
+    "Divertissement": [
+        "ab1", "rtl9", "teva", "comedycentral", "comedie", "justepourrire", 
+        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong", "Novocomedy", "MonteCarloDigitalTelevision"
+    ],
+    "Documentaires": [
+        "histoire", "planete", "toutehistoire", "investigation", "trek", 
+        "discovery", "rmcdecouverte", "dossiersfbi", "MDL"
+    ],
+    "Economie": [
+        "bfmbusiness", "bsmart", "tvfinance", "nweconomie", "business24"
+    ],
+    "Généraliste": [
+        "tv5monde", "ab3", "canale", "generaliste", "laune", "rtltvi"
+    ],
+    "Info": [
+        "euronews", "france24", "i24", "figaro", "meteo", "africanews", 
+        "cgtnfrench", "nwinfo", "rtfrance", "lci", "cnews", "bfmtv", "BFM", "FranceInter", "Francophonie24"
+    ],
+    "Jeunesse": [
+        "canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", 
+        "boomerang", "cartoon", "tivi5", "adn", "ludikids", "caillou", "bobleponge", 
+        "amuse", "bubbleguppies", "mbc3", "angelaanaconda", "avatar", "babyfirst", 
+        "doratv", "inazumaeleven", "sabrina", "tortuesninja", "victorious", "amouyazid"
+    ],
+    "Jeux": [
+        "esport", "gaming", "gameone", "nolife"
+    ],
+    "Local": [
+        "20minutestv", "t18", "canalalpha", "7alimoges", "8montblanc", "alsace20", "astv", "biptv", "telenantes", 
+        "tv7", "vosges", "kto", "canal32", "weo", "tebeo", "tebesud", "grandgeneve", "tvr", 
+        "matele", "tl7", "canalzoom", "cannes", "nancy", "tv78", "iltv", "telegohelle", 
+        "tv3v", "rhonetv", "telebielingue", "nrtv", "bluezoomf", "qu4treliegemedia", 
+        "telemb", "tvlux", "angers", "alpedhuez", "brionnais", "monacoinfo", "tvmonaco", 
+        "vedia", "viaoccitanie", "viatelepaese", "bfmalsace", "bfmcotedazur", "bfmdici", 
+        "bfmgrandlille", "bfmgrandlittoral", "bfmlyon", "bfmmarseille", "bfmnormandie", 
+        "bfmvar", "chamber", "latere", "maxtv", "carac", "tma", "rht", "basseterre", "iciElsass"
+    ],
+    "Musique": [
+        "mezzo", "mtv", "trace", "bblack", "melody", "rfm", "nrjhits", 
+        "cstarhits", "m6music", "mouv", "clubbingtv", "stingray", "AraBel", "FunRadio", "GenerationsTV", "QwestTVJazzBeyond", 
+        "RadioKaraoke", "SudRadio", "TZiK", "RadioFrontieres", "RTL2", "zenith"
+    ],
+    "Nature": [
+        "animaux", "natgeo", "ultranature", "seasons", "chasse", "peche", "wild"
+    ],
+    "Régional": [
+        "france3", "alsace20", "weo", "tebeo", "bfmalsace", "bfmlyon", "bfmmarseille", "viatelepaese"
+    ],
+    "Reportages": [
+        "echappeesbelles", "reportages", "envoyespecial"
+    ],
+    "Sciences": [
+        "sciencevie", "discovery", "explora", "curiosity"
+    ],
+    "Séries-Films": [
+        "canalplus", "cineplus", "ocs", "action", "ab1", "rtl9", "teva", "paramount", 
+        "warner", "novelas", "crimedistrict", "serieclub", "syfy", "tvbreizh", "polar", 
+        "comedycentral", "comedie", "studiocanal", "tcm", "persiana", "sony", "justepourrire", 
+        "cordier", "fillesdacote", "cinenanar", "cinewestern", "wildsidetv", "dossiersfbi", 
+        "novo19", "bbcdrama", "degrassi", "heleneetlesgarcons", "lemiracledelamour", 
+        "lesanneesfac", "lesnouveauxdetectives", "louislabrocante", "screamin", "theasylum", 
+        "walkertexasranger", "yaquelaveritequicompte", "instantsaga", "seriemax", "emotionl", "ab3",
+        "intocrime"
+    ],
+    "Sociétal": [
+        "kto", "religion", "emcitv", "ewtn", "iqraa", "handicaptv", "publicsenat", "MyGospelTV"
+    ],
+    "Sport": [
+        "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
+        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy"
+    ],
+    "Voyage": [
+        "voyage", "ushuaia", "montagne", "travelxp", "echappeesbelles", "ailleurs"
+    ],
+    "AFRIQUE & DOM-TOM": [
+        "atv", "canal3", "cna", "kc2", "ntv", "rtvc", "tvlacapitale", "mta9africa",
+        "aplus", "africa24", "africanews", "nollywood", "rtb", "rti", "ortm", "2mmonde", 
+        "antennereunion", "2stv", "tfm", "sentv", "nci", "lifetv", "canal2", "benietv", 
+        "beninwebtv", "bossbrotherstv", "cbctv", "ccpvtelevision", "centelevision", "crtv", 
+        "d3tv", "dntv", "edentv", "equinoxtv", "evitv", "exploitstv", "foryoutv", "jostvhd", 
+        "kin24", "lbfdrtv", "mbc1", "mbc5", "metropole", "misectv", "mouridetv", "onetv", 
+        "plextv", "publicsntv", "reflettv", "rewmitv", "rtd4", "rtg1", "rtg2", "rtnc", 
+        "rtnc3", "rtvs1", "senewebtv", "senjeunestv", "telecongo", "telesud", "tm1tv", 
+        "tnh", "tv2", "tvcbenin", "tvt", "vision4", "yegletv", "etv", "fusiontv", "tntv", 
+        "telepeyi", "a12tv", "actv.tg", "adotv", "afrique54", "afromagic", "afroturk", 
+        "antennea", "cam10", "canaf54", "chabibatv", 
+        "championtv", "cheriflatv", "compassiontv", "congoplanet", "degatv", 
+        "diaspora24", "digitalcongo", "douniatv", "fasso", "haitinews", "hmipromz", 
+        "identite", "ivoirechannel", "kaback", "kajou", "kalac", "lauradave", "lougatv", 
+        "madertv", "medi1tv", "mikuba", "mytv", "nazalis", "nessma", "nietatv", "novelachannel", 
+        "numerica", "nwmagazine", "onenation", "playtv", "pstvhd", "pvs", "rtjva", 
+        "rwanda", "saraounia", "smatogo", "storychannel", "sunulabel", "taltv", "teleboston", 
+        "telehaiti", "labrise", "telelouange", "telemaroc", "telemasters", "telemusik", 
+        "telepacific", "telepam", "telesahel", "teletchad", "televariete", "telezoukla", 
+        "tempoafric", "viaatv", "voxafrica", "walftv", "yakaartv", "zeeone", "zee-one",
+        "mta1world", "mta2europe", "mta4africa", "mta8africa", "otv",
+        "turkmenistan", "tv5mondeasia", "tv5mondeeurope", "tv5mondefrance", "tv5mondelatin", 
+        "tv5mondepacific", "tv5mondestyle", "tvcarib", "tvfamille", "radiotele", "telemix", "rthtv1", "mta5africa"
+    ],
+    "📺 PLUTO TV": [],
+    "📺 SAMSUNG TV PLUS": [],
+    "📺 RAKUTEN TV": [],
+    "📺 SONY": [],
+    "📦 AUTRES": []
+}
+
+def get_tvg_id(line):
+    match = re.search(r'tvg-id="([^".]+)', line, re.IGNORECASE)
+    return match.group(1).lower() if match else ""
+
+def main():
+    if os.path.exists('/app'): os.chdir('/app')
+    final_output = []
+    output_groups = {cat: [] for cat in CATEGORIES.keys()}
+
+    # --- PARTIE 1 : SOURCE TVRADIOZAP (Logiciel Script 1) ---
+    print("Traitement de TVRadioZap...")
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        # On force l'exécution dans le contexte actuel
-        exec(response.text, globals())
-        print(f">>> {name} : OK")
-    except Exception as e:
-        print(f"!!! ERREUR avec {name} : {e}")
+        res1 = requests.get(SOURCE_TVRADIOZAP, timeout=30)
+        res1.raise_for_status()
+        lines = res1.text.splitlines()
+        current_inf = None
+        for line in lines:
+            if line.startswith("#EXTINF:"):
+                info_low = line.lower()
+                new_group = "📦 AUTRES"
+                if "pluto" in info_low: new_group = "📺 PLUTO TV"
+                elif "samsung" in info_low: new_group = "📺 SAMSUNG TV PLUS"
+                elif "rakuten" in info_low: new_group = "📺 RAKUTEN TV"
+                elif "sony" in info_low: new_group = "📺 SONY"
+                
+                if 'group-title="' in line:
+                    start = line.find('group-title="') + 13
+                    end = line.find('"', start)
+                    line = line[:start] + new_group + line[end:]
+                else:
+                    line = line.replace('#EXTINF:', f'#EXTINF:-1 group-title="{new_group}" ')
+                current_inf = line
+            elif line.startswith("http") and current_inf:
+                # On ajoute à la catégorie correspondante dans le dictionnaire global
+                grp = "📺 PLUTO TV" if "PLUTO" in current_inf else "📺 SAMSUNG TV PLUS" if "SAMSUNG" in current_inf else "📺 RAKUTEN TV" if "RAKUTEN" in current_inf else "📺 SONY" if "SONY" in current_inf else "📦 AUTRES"
+                output_groups[grp].append({'sort_key': '00', 'data': f"{current_inf}\n{line}"})
+                current_inf = None
+    except Exception as e: print(f"Erreur Source 1: {e}")
+
+    # --- PARTIE 2 : SOURCE IPTV-ORG (Logiciel Script 2) ---
+    print("Traitement de IPTV-ORG...")
+    try:
+        res2 = requests.get(SOURCE_IPTV_ORG, timeout=30)
+        res2.raise_for_status()
+        entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', res2.text, re.MULTILINE)
+        for entry in entries:
+            lines = entry.splitlines()
+            info_line = lines[0]
+            norm_id = get_tvg_id(info_line)
+            
+            matched = False
+            for cat_name, keywords in CATEGORIES.items():
+                if any(k.lower() in norm_id for k in keywords):
+                    new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_name}"')
+                    output_groups[cat_name].append({'sort_key': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+                    matched = True
+                    break
+            if not matched:
+                new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
+                output_groups["📦 AUTRES"].append({'sort_key': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+    except Exception as e: print(f"Erreur Source 2: {e}")
+
+    # --- ECRITURE FINALE ---
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        f.write("#EXTM3U\n")
+        for cat in CATEGORIES.keys():
+            sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'])
+            for item in sorted_channels:
+                f.write(item['data'] + "\n")
+    
+    print(f"Fusion terminée ! Fichier '{OUTPUT_FILE}' généré.")
 
 if __name__ == "__main__":
-    # On se place dans le répertoire de l'app pour être sûr que les scripts
-    # trouvent et écrivent 'playlist.m3u' au bon endroit
-    os.chdir('/app')
-    
-    # 1. Filtre par pays
-    run_remote(URL_SCRIPT_PAYS, "TRI PAYS")
-    
-    # 2. Tri Zapping
-    run_remote(URL_SCRIPT_ZAP, "TRI ZAP")
-    
-    print(">>> FUSION TERMINEE : Vérifiez le nombre de chaînes dans l'interface.")
+    main()
