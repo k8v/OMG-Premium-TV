@@ -2,15 +2,26 @@ import requests
 import re
 import os
 
-# Chemin pour le volume Docker Oracle
+# Chemin pour le volume Docker
 OUTPUT_FILE = "/app/omg/playlist.m3u"
 
 # Sources
 SOURCE_TVRADIOZAP = "https://tvradiozap.eu/live/g/1/x/vlc/d/tvzeu.m3u"
 SOURCE_IPTV_ORG = "https://iptv-org.github.io/iptv/countries/fr.m3u"
 
-# Configuration des Catégories
+# Configuration des Catégories (L'ordre des clés ici définit l'ordre dans le M3U)
 CATEGORIES = {
+    "TNT": [], "Archives": [], "Art de vivre": [], "Cinéma": [], "Culture": [],
+    "Divertissement": [], "Documentaires": [], "Economie": [], "Généraliste": [],
+    "Info": [], "Jeunesse": [], "Jeux": [], "Local": [], "Musique": [],
+    "Nature": [], "Régional": [], "Reportages": [], "Sciences": [],
+    "Séries-Films": [], "Sociétal": [], "Sport": [], "Voyage": [],
+    "AFRIQUE & DOM-TOM": [], "📺 PLUTO TV": [], "📺 SAMSUNG TV PLUS": [],
+    "📺 RAKUTEN TV": [], "📺 SONY": [], "📦 AUTRES": []
+}
+
+# Liste de mots-clés pour le script 2 (IPTV-ORG)
+KEYWORDS_MAP = {
     "TNT": [
         "tf1", "france2", "france3", "france4", "france5", "m6", "arte", "c8", "w9", 
         "tmc", "tfx", "nrj12", "lcp", "bfmtv", "cnews", "cstar", "gulli", "tf1series", 
@@ -141,9 +152,10 @@ def get_tvg_id(line):
 
 def main():
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
-    output_groups = {cat: [] for cat in CATEGORIES.keys()}
+    # On stocke les données différemment pour garder l'ordre
+    storage = {cat: [] for cat in CATEGORIES.keys()}
 
-    # --- ÉTAPE 1 : TVRADIOZAP (PRIORITÉ MAX) ---
+    # --- ÉTAPE 1 : TVRADIOZAP (SERA TOUJOURS EN PREMIER) ---
     print("Source 1: TVRadioZap...")
     try:
         res1 = requests.get(SOURCE_TVRADIOZAP, timeout=30)
@@ -159,7 +171,6 @@ def main():
                 elif "rakuten" in info_low: new_group = "📺 RAKUTEN TV"
                 elif "sony" in info_low: new_group = "📺 SONY"
                 
-                # Mise à jour du group-title
                 if 'group-title="' in line:
                     start = line.find('group-title="') + 13
                     end = line.find('"', start)
@@ -168,44 +179,52 @@ def main():
                     line = line.replace('#EXTINF:', f'#EXTINF:-1 group-title="{new_group}" ')
                 current_inf = line
             elif line.startswith("http") and current_inf:
-                # On utilise '00_' pour que le tri alphabétique les place en haut
-                output_groups[new_group].append({'sort_key': f"00_{current_inf}", 'data': f"{current_inf}\n{line}"})
+                # On ajoute direct sans tri futur (priorité d'ordre d'arrivée)
+                storage[new_group].append(f"{current_inf}\n{line}")
                 current_inf = None
     except Exception as e: print(f"Erreur Source 1: {e}")
 
-    # --- ÉTAPE 2 : IPTV-ORG ---
+    # --- ÉTAPE 2 : IPTV-ORG (TRIÉ ALPHABÉTIQUEMENT APRÈS) ---
     print("Source 2: IPTV-org...")
     try:
         res2 = requests.get(SOURCE_IPTV_ORG, timeout=30)
         res2.raise_for_status()
         entries = re.findall(r'(#EXTINF:.*?\n(?:#EXTVLCOPT:.*?\n)*http.*)', res2.text, re.MULTILINE)
+        
+        temp_iptv = {cat: [] for cat in CATEGORIES.keys()}
+        
         for entry in entries:
             lines = entry.splitlines()
             info_line = lines[0]
             norm_id = get_tvg_id(info_line)
             
             matched = False
-            for cat_name, keywords in CATEGORIES.items():
+            for cat_name, keywords in KEYWORDS_MAP.items():
                 if any(k.lower() in norm_id for k in keywords):
                     new_info = re.sub(r'group-title="[^"]+"', f'group-title="{cat_name}"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="{cat_name}"')
-                    output_groups[cat_name].append({'sort_key': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+                    temp_iptv[cat_name].append({'id': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
                     matched = True
                     break
             if not matched:
                 new_info = re.sub(r'group-title="[^"]+"', f'group-title="📦 AUTRES"', info_line) if 'group-title="' in info_line else info_line.replace('#EXTINF:-1', f'#EXTINF:-1 group-title="📦 AUTRES"')
-                output_groups["📦 AUTRES"].append({'sort_key': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+                temp_iptv["📦 AUTRES"].append({'id': norm_id, 'data': f"{new_info}\n" + "\n".join(lines[1:])})
+
+        # On trie IPTV-org et on l'ajoute APRÈS TVRadioZap
+        for cat in CATEGORIES.keys():
+            sorted_iptv = sorted(temp_iptv[cat], key=lambda x: x['id'])
+            for item in sorted_iptv:
+                storage[cat].append(item['data'])
+
     except Exception as e: print(f"Erreur Source 2: {e}")
 
-    # --- ÉCRITURE FINALE ---
+    # --- ÉCRITURE ---
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write("#EXTM3U\n")
         for cat in CATEGORIES.keys():
-            # Tri par sort_key (les '00_' passeront avant les noms normaux)
-            sorted_channels = sorted(output_groups[cat], key=lambda x: x['sort_key'])
-            for item in sorted_channels:
-                f.write(item['data'] + "\n")
+            for channel_data in storage[cat]:
+                f.write(channel_data + "\n")
     
-    print(f"Playlist générée : {OUTPUT_FILE}")
+    print("Fichier généré avec succès !")
 
 if __name__ == "__main__":
     main()
