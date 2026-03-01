@@ -31,7 +31,7 @@ CATEGORIES_CONFIG = {
     ],
     "Divertissement": [
         "ab1", "rtl9", "teva", "comedycentral", "comedie", "justepourrire", 
-        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong", "Novocomedy", "MonteCarloDigitalTelevision", "motorvision"
+        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong", "Novocomedy", "MonteCarloDigitalTelevision", "motorvision", "FashionTV"
     ],
     "Documentaires": [
         "histoire", "planete", "toutehistoire", "investigation", "trek", 
@@ -45,7 +45,7 @@ CATEGORIES_CONFIG = {
     ],
     "Info": [
         "euronews", "france24", "i24", "figaro", "meteo", "africanews", 
-        "cgtnfrench", "nwinfo", "rtfrance", "lci", "cnews", "bfmtv", "BFM", "FranceInter", "Francophonie24"
+        "cgtnfrench", "nwinfo", "rtfrance", "lci", "cnews", "bfmtv", "BFM", "FranceInter", "Francophonie24", "LeMedia"
     ],
     "Jeunesse": [
         "canalj", "disney", "mangas", "piwi", "nickelodeon", "tiji", "teletoon", 
@@ -75,7 +75,7 @@ CATEGORIES_CONFIG = {
         "animaux", "natgeo", "ultranature", "seasons", "chasse", "peche", "wild"
     ],
     "Régional": [
-        "france3", "alsace20", "weo", "tebeo", "bfmalsace", "bfmlyon", "bfmmarseille", "viatelepaese", "MoselleTV"
+        "france3", "alsace20", "weo", "tebeo", "bfmalsace", "bfmlyon", "bfmmarseille", "viatelepaese", "MoselleTV", "LyonCapitaleTV"
     ],
     "Reportages": [
         "echappeesbelles", "reportages", "envoyespecial"
@@ -98,7 +98,7 @@ CATEGORIES_CONFIG = {
     ],
     "Sport": [
         "sport", "bein", "eurosport", "equidia", "automoto", "rmcsport", "golf", 
-        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy"
+        "multisports", "footplus", "fighting", "nhlcentreice", "journaldugolf", "nautical", "failarmy", "FIFAPlus"
     ],
     "Voyage": [
         "voyage", "ushuaia", "montagne", "travelxp", "echappeesbelles", "ailleurs"
