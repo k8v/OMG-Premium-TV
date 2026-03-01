@@ -16,10 +16,10 @@ def exec_remote_script(url):
         print(f"Erreur avec {url} : {e}")
 
 if __name__ == "__main__":
-    # 1. On lance d'abord le tri par pays
+    # 1. On lance d'abord le tri zap
     exec_remote_script(URL_SCRIPT_ZAP)
     
-    # 2. On lance ensuite le tri zap
+    # 2. On lance ensuite le tri pays
     exec_remote_script(URL_SCRIPT_PAYS)
     
     print("Traitement global termine.")
