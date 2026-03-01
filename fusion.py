@@ -75,7 +75,7 @@ CATEGORIES_CONFIG = {
         "animaux", "natgeo", "ultranature", "seasons", "chasse", "peche", "wild"
     ],
     "Régional": [
-        "france3", "alsace20", "weo", "tebeo", "bfmalsace", "bfmlyon", "bfmmarseille", "viatelepaese"
+        "france3", "alsace20", "weo", "tebeo", "bfmalsace", "bfmlyon", "bfmmarseille", "viatelepaese", "MoselleTV"
     ],
     "Reportages": [
         "echappeesbelles", "reportages", "envoyespecial"
