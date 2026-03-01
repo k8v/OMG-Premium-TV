@@ -31,7 +31,7 @@ CATEGORIES_CONFIG = {
     ],
     "Divertissement": [
         "ab1", "rtl9", "teva", "comedycentral", "comedie", "justepourrire", 
-        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong", "Novocomedy", "MonteCarloDigitalTelevision"
+        "yaquelaveritequicompte", "clique", "mcm", "mta", "enorme", "bet", "Gong", "Novocomedy", "MonteCarloDigitalTelevision", "Motorvision.tv"
     ],
     "Documentaires": [
         "histoire", "planete", "toutehistoire", "investigation", "trek", 
